@@ -8,6 +8,11 @@
       "label": "EB Garamond (self-hosted, free)",
       "family": "\"EB Garamond\", Georgia, serif"
     },
+    "old-standard": {
+      "class": "font-old-standard",
+      "label": "Old Standard TT (Kevin — self-hosted)",
+      "family": "\"Old Standard TT\", \"EB Garamond\", Georgia, serif"
+    },
     "georgia": {
       "class": "font-georgia",
       "label": "Georgia (system)",

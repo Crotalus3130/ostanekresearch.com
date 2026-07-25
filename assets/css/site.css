@@ -31,6 +31,28 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Old Standard TT";
+  src: url("../fonts/OldStandardTT-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Old Standard TT";
+  src: url("../fonts/OldStandardTT-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Old Standard TT";
+  src: url("../fonts/OldStandardTT-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --ground: #14120e;
   --panel: #1c1913;
@@ -45,6 +67,7 @@
 
 /* Per-post / per-page font choices (beauty = value) */
 body.font-garamond { --body-font: "EB Garamond", Georgia, serif; }
+body.font-old-standard { --body-font: "Old Standard TT", "EB Garamond", Georgia, serif; }
 body.font-georgia { --body-font: Georgia, "Times New Roman", serif; }
 body.font-system-serif { --body-font: ui-serif, Georgia, serif; }
 /* Adobe: only after you load a licensed kit or local licensed files */
