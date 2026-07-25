@@ -1,0 +1,188 @@
+/* Ostanek Research — shared site chrome
+   Fonts: EB Garamond self-hosted (SIL OFL).
+   Adobe fonts: set --body-font via page class or Adobe Fonts kit in config. */
+
+@font-face {
+  font-family: "EB Garamond";
+  src: url("../fonts/EBGaramond-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "EB Garamond";
+  src: url("../fonts/EBGaramond-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "EB Garamond";
+  src: url("../fonts/EBGaramond-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "EB Garamond";
+  src: url("../fonts/EBGaramond-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ground: #14120e;
+  --panel: #1c1913;
+  --brass: #c89b3c;
+  --gold: #e8d5a3;
+  --cream: #e3dac4;
+  --muted: #94896f;
+  --line: #3a3324;
+  --body-font: "EB Garamond", Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --ui-font: "EB Garamond", Georgia, serif;
+}
+
+/* Per-post / per-page font choices (beauty = value) */
+body.font-garamond { --body-font: "EB Garamond", Georgia, serif; }
+body.font-georgia { --body-font: Georgia, "Times New Roman", serif; }
+body.font-system-serif { --body-font: ui-serif, Georgia, serif; }
+/* Adobe: only after you load a licensed kit or local licensed files */
+body.font-adobe-jenson { --body-font: "Adobe Jenson Pro", "EB Garamond", Georgia, serif; }
+body.font-adobe-minion { --body-font: "Minion Pro", "EB Garamond", Georgia, serif; }
+body.font-adobe-caslon { --body-font: "Adobe Caslon Pro", "EB Garamond", Georgia, serif; }
+body.font-custom { /* set --body-font inline from frontmatter */ }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--cream);
+  font-family: var(--body-font);
+  line-height: 1.68;
+  font-size: 19px;
+  letter-spacing: 0.01em;
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+}
+::selection { background: rgba(200, 155, 60, 0.28); color: var(--gold); }
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 28px; }
+a { color: var(--gold); text-decoration-color: rgba(200, 155, 60, 0.45); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--brass); }
+h1, h2, h3 { font-weight: 400; text-wrap: balance; margin: 0; font-family: var(--body-font); }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 12px;
+  color: var(--brass);
+  margin: 0 0 18px;
+}
+.nav {
+  padding: 22px 0 0;
+  font-size: 15px;
+  color: var(--muted);
+}
+.nav a { margin-right: 1.1em; color: var(--muted); text-decoration: none; }
+.nav a:hover { color: var(--gold); }
+
+.masthead { padding: 100px 0 72px; text-align: center; }
+.masthead h1 { font-size: 42px; line-height: 1.18; color: var(--gold); }
+.masthead .thesis {
+  margin: 28px auto 0;
+  max-width: 52ch;
+  color: var(--cream);
+  font-size: 19px;
+}
+.masthead .lineage {
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 17px;
+}
+.rule {
+  width: 64px; height: 1px; background: var(--brass);
+  margin: 56px auto; border: 0; opacity: 0.7;
+}
+
+.section { padding: 0 0 64px; }
+.section > h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 13px;
+  color: var(--brass);
+  margin-bottom: 26px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 32px 34px;
+}
+.card h3 { font-size: 24px; color: var(--gold); margin-bottom: 10px; }
+.card p { margin: 0 0 16px; color: var(--cream); }
+.card .meta { color: var(--muted); font-size: 15px; margin: 0; }
+.card + .card { margin-top: 20px; }
+
+/* Article body */
+article.note { padding: 48px 0 88px; }
+article.note header { margin-bottom: 36px; }
+article.note h1 {
+  font-size: 34px;
+  line-height: 1.22;
+  color: var(--gold);
+  margin: 0 0 14px;
+}
+article.note .meta { color: var(--muted); font-size: 15px; margin: 0 0 8px; }
+article.note .byline { color: var(--brass); font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; }
+article.note .body { max-width: 62ch; }
+article.note .body p { margin: 0 0 1.15em; }
+article.note .body h2 {
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin: 2.2em 0 0.85em;
+}
+article.note .body blockquote {
+  margin: 1.4em 0;
+  padding-left: 1.1em;
+  border-left: 2px solid var(--brass);
+  color: var(--gold);
+  font-style: italic;
+}
+article.note .body ul, article.note .body ol { margin: 0 0 1.15em; padding-left: 1.3em; }
+article.note .body li { margin: 0.35em 0; }
+article.note .body code {
+  font-size: 0.88em;
+  color: var(--gold);
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+footer.site {
+  border-top: 1px solid var(--line);
+  padding: 40px 0 64px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 15px;
+}
+footer.site p { margin: 6px 0; }
+
+.voice-pill {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass);
+  border: 1px solid var(--line);
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 540px) {
+  .masthead { padding: 72px 0 52px; }
+  .masthead h1 { font-size: 32px; }
+  .card { padding: 24px 22px; }
+  article.note h1 { font-size: 28px; }
+  body { font-size: 18px; }
+}

@@ -1,0 +1,34 @@
+{
+  "title": "Ostanek Research",
+  "url": "https://ostanekresearch.com",
+  "default_font": "garamond",
+  "fonts": {
+    "garamond": {
+      "class": "font-garamond",
+      "label": "EB Garamond (self-hosted, free)",
+      "family": "\"EB Garamond\", Georgia, serif"
+    },
+    "georgia": {
+      "class": "font-georgia",
+      "label": "Georgia (system)",
+      "family": "Georgia, \"Times New Roman\", serif"
+    },
+    "adobe-jenson": {
+      "class": "font-adobe-jenson",
+      "label": "Adobe Jenson Pro (needs Adobe Fonts kit or licensed files)",
+      "family": "\"Adobe Jenson Pro\", \"EB Garamond\", Georgia, serif"
+    },
+    "adobe-minion": {
+      "class": "font-adobe-minion",
+      "label": "Minion Pro (needs Adobe Fonts kit or licensed files)",
+      "family": "\"Minion Pro\", \"EB Garamond\", Georgia, serif"
+    },
+    "adobe-caslon": {
+      "class": "font-adobe-caslon",
+      "label": "Adobe Caslon Pro (needs Adobe Fonts kit or licensed files)",
+      "family": "\"Adobe Caslon Pro\", \"EB Garamond\", Georgia, serif"
+    }
+  },
+  "adobe_fonts_css": "",
+  "_comment_adobe": "Paste an Adobe Fonts project CSS URL here (https://use.typekit.net/xxxx.css) when you want Jenson/Minion/Caslon live on the public site. Desktop Adobe font files must not be uploaded without a web license."
+}
