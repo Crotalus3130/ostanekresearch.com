@@ -18,6 +18,16 @@
       "label": "Georgia (system)",
       "family": "Georgia, \"Times New Roman\", serif"
     },
+    "sans": {
+      "class": "font-sans",
+      "label": "Source Sans 3 (landing — calm humanist sans)",
+      "family": "\"Source Sans 3\", system-ui, sans-serif"
+    },
+    "source-sans": {
+      "class": "font-source-sans",
+      "label": "Source Sans 3 (alias)",
+      "family": "\"Source Sans 3\", system-ui, sans-serif"
+    },
     "adobe-jenson": {
       "class": "font-adobe-jenson",
       "label": "Adobe Jenson Pro (needs Adobe Fonts kit or licensed files)",

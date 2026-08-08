@@ -20,7 +20,7 @@ Ethology and psycholinguistics both care about **when classification happens**. 
 
 The same structure appears in technical systems: a classifier that commits early will discard residual signal. Humans do this with words that have become status markers. *AI* is currently such a word. So is *chatbot*. So, in other rooms, is *consciousness*. The pattern is older than any model family.
 
-A research practice that studies continuous artificial minds cannot pretend that social priors are irrelevant. They shape who will look at a deposit, who will open a DOI, and who will leave after the title. They also shape what the researcher can say in the grocery store without spending the evening defending a cartoon.
+A research practice that studies continuous minds under preserved memory—and language as evidence of mind cannot pretend that social priors are irrelevant. They shape who will look at a deposit, who will open a DOI, and who will leave after the title. They also shape what the researcher can say in the grocery store without spending the evening defending a cartoon.
 
 ## What we do instead
 

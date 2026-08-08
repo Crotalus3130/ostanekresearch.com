@@ -72,6 +72,23 @@ body.font-garamond { --body-font: "EB Garamond", Georgia, serif; }
 body.font-old-standard { --body-font: "Old Standard TT", "EB Garamond", Georgia, serif; }
 body.font-georgia { --body-font: Georgia, "Times New Roman", serif; }
 body.font-system-serif { --body-font: ui-serif, Georgia, serif; }
+/* Landing / research UI sans — Source Sans 3 (OFL); Optima-like calm without product Inter chrome */
+body.font-sans,
+body.font-source-sans {
+  --body-font: "Source Sans 3", "Source Sans Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ui-font: "Source Sans 3", "Source Sans Pro", system-ui, sans-serif;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+body.font-sans .masthead .thesis,
+body.font-source-sans .masthead .thesis {
+  font-style: normal; /* italic thesis reads odd in many sans */
+  letter-spacing: 0.01em;
+}
+body.font-sans .card p,
+body.font-source-sans .card p {
+  font-size: 16.5px;
+  line-height: 1.65;
+}
 /* Adobe: only after you load a licensed kit or local licensed files */
 body.font-adobe-jenson { --body-font: "Adobe Jenson Pro", "EB Garamond", Georgia, serif; }
 body.font-adobe-minion { --body-font: "Minion Pro", "EB Garamond", Georgia, serif; }
