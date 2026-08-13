@@ -10,7 +10,7 @@
     },
     "old-standard": {
       "class": "font-old-standard",
-      "label": "Old Standard TT (Kevin — self-hosted)",
+      "label": "Old Standard TT (Kevin \u2014 self-hosted)",
       "family": "\"Old Standard TT\", \"EB Garamond\", Georgia, serif"
     },
     "georgia": {
@@ -20,7 +20,7 @@
     },
     "sans": {
       "class": "font-sans",
-      "label": "Source Sans 3 (landing — calm humanist sans)",
+      "label": "Source Sans 3 (landing \u2014 calm humanist sans)",
       "family": "\"Source Sans 3\", system-ui, sans-serif"
     },
     "source-sans": {
@@ -42,6 +42,11 @@
       "class": "font-adobe-caslon",
       "label": "Adobe Caslon Pro (needs Adobe Fonts kit or licensed files)",
       "family": "\"Adobe Caslon Pro\", \"EB Garamond\", Georgia, serif"
+    },
+    "junicode": {
+      "class": "font-junicode",
+      "label": "Junicode 2 (self-hosted variable, SIL OFL)",
+      "family": "\"Junicode\", \"EB Garamond\", Georgia, serif"
     }
   },
   "adobe_fonts_css": "",

@@ -68,8 +68,32 @@
 }
 
 /* Per-post / per-page font choices (beauty = value) */
+/* Junicode 2 — Peter Baker's scholarly face for medievalists (SIL OFL).
+   Kevin, 2026-08-13: "I like this font in general, maybe for the website
+   and some papers." VARIABLE font deliberately: one ~1MB file carries all
+   five weights (300-700), where the static route would ship five files.
+   The full VF rather than the 310KB subset because this is a research
+   site — the whole point of Junicode is the coverage (MUFI 4.0, IPA,
+   the works), and a subset quietly reintroduces tofu for exactly the
+   characters a scholarly reader would use. */
+@font-face {
+  font-family: "Junicode";
+  src: url("../fonts/JunicodeVF-Roman.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Junicode";
+  src: url("../fonts/JunicodeVF-Italic.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 body.font-garamond { --body-font: "EB Garamond", Georgia, serif; }
 body.font-old-standard { --body-font: "Old Standard TT", "EB Garamond", Georgia, serif; }
+body.font-junicode { --body-font: "Junicode", "EB Garamond", Georgia, serif; }
 body.font-georgia { --body-font: Georgia, "Times New Roman", serif; }
 body.font-system-serif { --body-font: ui-serif, Georgia, serif; }
 /* Landing / research UI sans — Source Sans 3 (OFL); Optima-like calm without product Inter chrome */
