@@ -53,18 +53,42 @@
   font-display: swap;
 }
 
+/* Default = Orrery landing warm-dark (aligned 2026-08-13).
+   Light paper scheme: body.theme-light */
 :root {
-  --ground: #12141a;       /* cool research dark (was warm near-black) */
-  --panel: #1a1d26;
-  --brass: #9aab8c;        /* muted olive — journal accent, less “brand gold” */
-  --gold: #e6e2d6;         /* paper heading */
-  --cream: #d4d0c4;
-  --muted: #8b9088;
-  --line: #2e3340;
-  --cite: #7a8494;         /* DOI / mono meta */
+  --ground: #14120e;       /* Orrery warm near-black */
+  --panel: #1c1913;
+  --panel-2: #221e16;
+  --brass: #c89b3c;        /* Orrery accent */
+  --gold: #e8d5a3;         /* Orrery heading */
+  --cream: #e3dac4;        /* Orrery body */
+  --muted: #94896f;
+  --line: #3a3324;
+  --cite: #8a7f68;
+  --ink: #e3dac4;          /* primary text (alias cream on dark) */
+  --btn-ink: #1a1509;
   --body-font: "EB Garamond", Georgia, "Iowan Old Style", "Times New Roman", serif;
   --ui-font: "EB Garamond", Georgia, serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --link-underline: rgba(200, 155, 60, 0.45);
+  --selection-bg: rgba(200, 155, 60, 0.28);
+}
+
+/* Light paper scheme — same brass lineage, readable day surface */
+body.theme-light {
+  --ground: #f6f1e6;       /* warm paper */
+  --panel: #fffdf8;
+  --panel-2: #efe8d8;
+  --brass: #a67c28;        /* brass on paper (slightly deeper) */
+  --gold: #3d3426;         /* headings = ink, not pale gold */
+  --cream: #2c261c;        /* body ink */
+  --ink: #2c261c;
+  --muted: #6e6554;
+  --line: #ddd2bc;
+  --cite: #7a7160;
+  --btn-ink: #1a1509;
+  --link-underline: rgba(166, 124, 40, 0.4);
+  --selection-bg: rgba(200, 155, 60, 0.22);
 }
 
 /* Per-post / per-page font choices (beauty = value) */
@@ -131,10 +155,21 @@ body {
   letter-spacing: 0.01em;
   font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
 }
-::selection { background: rgba(200, 155, 60, 0.28); color: var(--gold); }
+::selection { background: var(--selection-bg); color: var(--gold); }
 .wrap { max-width: 680px; margin: 0 auto; padding: 0 28px; }
-a { color: var(--gold); text-decoration-color: rgba(154, 171, 140, 0.45); text-underline-offset: 3px; }
+a { color: var(--gold); text-decoration-color: var(--link-underline); text-underline-offset: 3px; }
 a:hover { text-decoration-color: var(--brass); }
+body.theme-light a { color: var(--brass); }
+body.theme-light a:hover { color: #7a5a1a; }
+body.theme-light .masthead h1,
+body.theme-light .card h3,
+body.theme-light article.note h1,
+body.theme-light .pub-list .pub-title { color: var(--gold); }
+body.theme-light .btn,
+body.theme-light button.primary {
+  background: var(--brass);
+  color: var(--btn-ink);
+}
 h1, h2, h3 { font-weight: 400; text-wrap: balance; margin: 0; font-family: var(--body-font); }
 
 .eyebrow {
