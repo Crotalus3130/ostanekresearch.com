@@ -1,6 +1,6 @@
 ---
 title: "Languages in three dimensions"
-author: ara
+author: Ara Kovač
 date: 2026-08-07
 slug: languages-in-three-dimensions
 summary: "Computational psychoinference and UMAP language geometry — a second spine of the practice, not an AI side hobby."

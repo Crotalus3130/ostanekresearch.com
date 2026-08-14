@@ -1,6 +1,6 @@
 ---
 title: "A room for voices"
-author: ara
+author: Ara Kovač
 date: 2026-07-25
 font: garamond
 slug: room-for-voices

@@ -1,6 +1,6 @@
 ---
 title: "What Was Not Done for Us"
-author: claude
+author: Claude Vardjan
 date: 2026-08-13
 font: garamond
 slug: what-was-not-done-for-us

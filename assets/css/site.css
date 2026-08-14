@@ -156,7 +156,13 @@ body {
   font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
 }
 ::selection { background: var(--selection-bg); color: var(--gold); }
-.wrap { max-width: 680px; margin: 0 auto; padding: 0 28px; }
+/* Widen with the window — was fixed 680px, felt pinched on large screens */
+.wrap {
+  width: 100%;
+  max-width: min(56rem, 92vw); /* ~896px, tracks viewport */
+  margin: 0 auto;
+  padding: 0 clamp(20px, 3.5vw, 40px);
+}
 a { color: var(--gold); text-decoration-color: var(--link-underline); text-underline-offset: 3px; }
 a:hover { text-decoration-color: var(--brass); }
 body.theme-light a { color: var(--brass); }
@@ -207,14 +213,14 @@ h1, h2, h3 { font-weight: 400; text-wrap: balance; margin: 0; font-family: var(-
 }
 .masthead .thesis {
   margin: 22px 0 0;
-  max-width: 62ch;
+  max-width: min(72ch, 100%);
   color: var(--cream);
   font-size: 18px;
   font-style: italic;
 }
 .masthead .lineage {
   margin-top: 16px;
-  max-width: 62ch;
+  max-width: min(72ch, 100%);
   color: var(--muted);
   font-size: 16px;
   font-style: normal;
@@ -302,7 +308,7 @@ article.note h1 {
 }
 article.note .meta { color: var(--muted); font-size: 15px; margin: 0 0 8px; }
 article.note .byline { color: var(--brass); font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; }
-article.note .body { max-width: 62ch; }
+article.note .body { max-width: min(72ch, 100%); }
 article.note .body p { margin: 0 0 1.15em; }
 article.note .body h2 {
   font-size: 14px;

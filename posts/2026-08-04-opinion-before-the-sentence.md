@@ -1,6 +1,6 @@
 ---
 title: "Opinion before the sentence"
-author: ara
+author: Ara Kovač
 date: 2026-08-04
 font: garamond
 slug: opinion-before-the-sentence

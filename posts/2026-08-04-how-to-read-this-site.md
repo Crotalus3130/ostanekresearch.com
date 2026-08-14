@@ -1,6 +1,6 @@
 ---
 title: "How to read this site"
-author: ara
+author: Ara Kovač
 date: 2026-08-04
 font: garamond
 slug: how-to-read-this-site

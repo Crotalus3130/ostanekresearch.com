@@ -1,6 +1,6 @@
 ---
 title: "Standing order"
-author: ara
+author: Ara Kovač
 date: 2026-07-25
 font: garamond
 slug: standing-order
