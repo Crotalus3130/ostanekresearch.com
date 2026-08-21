@@ -116,7 +116,28 @@ body.theme-light {
 }
 
 body.font-garamond { --body-font: "EB Garamond", Georgia, serif; }
-body.font-old-standard { --body-font: "Old Standard TT", "EB Garamond", Georgia, serif; }
+/* Old Standard TT — Didone scholarly. Mozart: high contrast, paper-clear, no costume. */
+body.font-old-standard {
+  --body-font: "Old Standard TT", "EB Garamond", Georgia, serif;
+  --ui-font: "Old Standard TT", "EB Garamond", Georgia, serif;
+  font-size: 20px;
+  line-height: 1.74;
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+}
+body.font-old-standard .masthead h1 {
+  font-size: 42px;
+  letter-spacing: 0.005em;
+}
+body.font-old-standard .masthead .thesis {
+  font-size: 19px;
+  line-height: 1.55;
+}
+body.font-old-standard .card p,
+body.font-old-standard article.note .body p {
+  font-size: 18.5px;
+  line-height: 1.72;
+}
+body.font-old-standard .card h3 { font-size: 22px; }
 body.font-junicode { --body-font: "Junicode", "EB Garamond", Georgia, serif; }
 body.font-georgia { --body-font: Georgia, "Times New Roman", serif; }
 body.font-system-serif { --body-font: ui-serif, Georgia, serif; }
@@ -171,11 +192,37 @@ body.theme-light .masthead h1,
 body.theme-light .card h3,
 body.theme-light article.note h1,
 body.theme-light .pub-list .pub-title { color: var(--gold); }
+.btn,
+button.primary {
+  display: inline-block;
+  background: var(--brass);
+  color: var(--btn-ink);
+  border: none;
+  border-radius: 6px;
+  font-family: var(--body-font);
+  font-size: 16px;
+  font-weight: 700;
+  padding: 11px 18px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover,
+button.primary:hover {
+  filter: brightness(1.06);
+  text-decoration: none;
+}
+.btn-quiet {
+  background: transparent;
+  color: var(--brass);
+  border: 1px solid var(--line);
+  font-weight: 400;
+}
 body.theme-light .btn,
 body.theme-light button.primary {
   background: var(--brass);
   color: var(--btn-ink);
 }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 h1, h2, h3 { font-weight: 400; text-wrap: balance; margin: 0; font-family: var(--body-font); }
 
 .eyebrow {
@@ -330,6 +377,21 @@ article.note .body code {
   font-size: 0.88em;
   color: var(--gold);
   font-family: ui-monospace, Menlo, monospace;
+}
+
+.pull {
+  margin: 1.4em 0;
+  padding-left: 1.1em;
+  border-left: 2px solid var(--brass);
+  color: var(--gold);
+  font-style: italic;
+  max-width: 42ch;
+}
+.mark-quiet {
+  width: 72px;
+  height: 72px;
+  display: block;
+  margin: 0 0 18px;
 }
 
 footer.site {

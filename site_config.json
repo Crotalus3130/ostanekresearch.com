@@ -1,7 +1,7 @@
 {
   "title": "Ostanek Research",
   "url": "https://ostanekresearch.com",
-  "default_font": "garamond",
+  "default_font": "old-standard",
   "fonts": {
     "garamond": {
       "class": "font-garamond",
