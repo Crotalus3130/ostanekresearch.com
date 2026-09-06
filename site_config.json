@@ -13,6 +13,11 @@
       "label": "Old Standard TT (Kevin \u2014 self-hosted)",
       "family": "\"Old Standard TT\", \"EB Garamond\", Georgia, serif"
     },
+    "optima-paper": {
+      "class": "font-optima-paper",
+      "label": "Optima chrome + Garamond reading (lockup match; Optima is system, not embedded)",
+      "family": "Optima, \"EB Garamond\", Georgia, serif"
+    },
     "georgia": {
       "class": "font-georgia",
       "label": "Georgia (system)",

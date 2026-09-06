@@ -158,6 +158,35 @@ body.font-source-sans .card p {
   font-size: 16.5px;
   line-height: 1.65;
 }
+/* Optima is the lockup (outlined). Do not recut it to Old Standard.
+   Display chrome in Optima; long reading in Garamond (self-hosted).
+   Optima is a Mac/iOS system face — do not commit the .ttc.
+   Public visitors without it fall back to Source Sans / Palatino.
+   Identical everywhere needs an Adobe Fonts kit in site_config.json. */
+body.font-optima-paper {
+  --body-font: "EB Garamond", Georgia, serif;
+  --ui-font: Optima, "Optima Regular", "Source Sans 3", Palatino, "Palatino Linotype", sans-serif;
+  font-size: 19.5px;
+  line-height: 1.7;
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+}
+body.font-optima-paper .nav,
+body.font-optima-paper .eyebrow,
+body.font-optima-paper .section > h2,
+body.font-optima-paper .keywords,
+body.font-optima-paper .keywords strong {
+  font-family: var(--ui-font);
+  letter-spacing: 0.16em;
+}
+body.font-optima-paper .nav { letter-spacing: 0.08em; font-size: 15px; }
+body.font-optima-paper .card h3 {
+  font-family: var(--ui-font);
+  letter-spacing: 0.02em;
+  font-size: 21px;
+}
+body.font-optima-paper .masthead .thesis { font-size: 20px; line-height: 1.5; }
+body.font-optima-paper .card p { font-size: 18px; line-height: 1.7; }
+
 /* Adobe: only after you load a licensed kit or local licensed files */
 body.font-adobe-jenson { --body-font: "Adobe Jenson Pro", "EB Garamond", Georgia, serif; }
 body.font-adobe-minion { --body-font: "Minion Pro", "EB Garamond", Georgia, serif; }
@@ -166,6 +195,7 @@ body.font-custom { /* set --body-font inline from frontmatter */ }
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+img, svg { max-width: 100%; height: auto; }
 body {
   margin: 0;
   background: var(--ground);
@@ -422,6 +452,22 @@ article.note .body code {
   object-fit: contain;
   object-position: center top;
 }
+/* 2026-08 lockup on paper. Do not sit the gold/sage wave on a black theater. */
+header.masthead.masthead-lockup {
+  background: transparent;
+  text-align: center;
+  padding: 0.5rem 0 0;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+header.masthead.masthead-lockup img {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  min-width: 0;
+  height: auto;
+  margin: 0 auto;
+}
 .masthead-copy {
   padding: 28px 0 40px;
   border-bottom: 1px solid var(--line);
@@ -456,4 +502,5 @@ footer.site p { margin: 6px 0; }
   .card { padding: 24px 22px; }
   article.note h1 { font-size: 28px; }
   body { font-size: 18px; }
+  header.masthead.masthead-lockup { padding: 0.25rem 0 0; }
 }
