@@ -387,6 +387,12 @@ article.note .meta { color: var(--muted); font-size: 15px; margin: 0 0 8px; }
 article.note .byline { color: var(--brass); font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; }
 article.note .body { max-width: min(72ch, 100%); }
 article.note .body p { margin: 0 0 1.15em; }
+article.note .body img {
+  display: block;
+  width: min(12rem, 42%);
+  height: auto;
+  margin: 0.2em 0 1.6em;
+}
 article.note .body h2 {
   font-size: 14px;
   letter-spacing: 0.18em;
