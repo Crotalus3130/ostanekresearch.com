@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>Ostanek Research</title>
 <meta name="description" content="Independent research practice: economics beyond markets — the algebra of life. Language as measurement of the inner economy. Deposited papers (SSRN, Zenodo).">
 <meta property="og:title" content="Ostanek Research">
@@ -11,12 +12,26 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ostanekresearch.com/assets/mark/ostanek-research-night.jpg">
 <link rel="stylesheet" href="/assets/css/site.css">
+<script>
+/* Set the stored theme override before first paint. Without this the page
+   paints light, then flips — the flash of wrong theme. Deliberately inline
+   and tiny; the real toggle is /assets/js/theme.js, loaded deferred. */
+(function(){try{var t=localStorage.getItem("or-theme");
+if(t)document.documentElement.setAttribute("data-preboot",t);}catch(e){}})();
+</script>
+<style>
+/* Applies the pre-boot value to <body> the instant the body tag is parsed,
+   without waiting for the deferred script. */
+html[data-preboot="dark"] body.theme-light{--ground:#14120e;--panel:#1c1913;--panel-2:#221e16;--brass:#c89b3c;--gold:#e8d5a3;--cream:#e3dac4;--ink:#e3dac4;--muted:#9a8f75;--line:#3a3324;--cite:#8a7f68;--btn-ink:#1a1509}
+html[data-preboot="dark"] body.theme-light a{color:#e8d5a3}
+</style>
 </head>
 <body class="font-optima-paper theme-light">
 
 <nav class="nav wrap">
   <a href="/">Home</a>
   <a href="#deposits">Deposits</a>
+  <a href="#research">Research</a>
   <a href="/field/">Field notes</a>
   <a href="/orrery/">Orrery</a>
 </nav>
@@ -27,35 +42,34 @@
     <h1 class="sr-only">Ostanek Research</h1>
   </div>
 </header>
-<div class="wrap masthead-copy">
-    <p class="eyebrow">Independent research practice · Est. 2026</p>
-    <p class="thesis">
-      Economics goes beyond markets. It is the algebra of life.
-    </p>
-    <p class="lineage">
-      The inner world is the subjective reflection of economic action —
-      which is just behavior — and it behaves by the same rules. Words
-      are the radioisotopes of psychophysiology. They pop thoughts out
-      the way revealed utility pops preference. What we think about is
-      what we value.
-    </p>
-    <p class="lineage">
-      A word is letters tied to meaning. A word vector is numbers tied
-      to the same meaning. Join them, and you can read that inner economy
-      without standing inside the reading. That is
-      <em>computational psychoinference</em>. The attention series
-      (English, 1946–2019) measures a subjective economy the objective
-      accounts do not detect.
-    </p>
-    <p class="lineage">
-      The practice writes papers, builds instruments, and watches. It is
-      not a market-research shop, and it is not a single-issue shop.
-    </p>
-    <p class="keywords">
-      <strong>Keywords</strong>
-      economics of choice · language as measurement · attention
-      · computational psychoinference · independent&nbsp;research
-    </p>
+
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Independent research practice · Est. 2026</p>
+      <p class="thesis-display">
+        Economics goes beyond markets. It is the algebra of life.
+      </p>
+    </div>
+    <dl class="facts">
+      <div>
+        <dt>Attention series</dt>
+        <dd>1946&ndash;2019 <span class="unit">· English, 73 years</span></dd>
+      </div>
+      <div>
+        <dt>Deposits</dt>
+        <dd>4 <span class="unit">· SSRN / Zenodo, with DOIs</span></dd>
+      </div>
+      <div>
+        <dt>Field notes</dt>
+        <dd>15 <span class="unit">· named bylines</span></dd>
+      </div>
+      <div>
+        <dt>Practice</dt>
+        <dd>Tampa <span class="unit">· independent, unaffiliated</span></dd>
+      </div>
+    </dl>
+  </div>
 </div>
 
 <main class="wrap">
@@ -94,47 +108,77 @@
         </div>
       </li>
     </ul>
-    <p class="card meta" style="border:0;padding-left:0;margin-top:8px">
+    <p class="card meta" style="border:0;padding-left:0;margin-top:18px">
       Full corpus and instruments described in the deposits. Field notes document ongoing observation.
+    </p>
+  </section>
+
+  <section class="section" id="argument">
+    <h2>The argument</h2>
+    <p class="lineage">
+      The inner world is the subjective reflection of economic action —
+      which is just behavior — and it behaves by the same rules. Words
+      are the radioisotopes of psychophysiology. They pop thoughts out
+      the way revealed utility pops preference. What we think about is
+      what we value.
+    </p>
+    <p class="lineage">
+      A word is letters tied to meaning. A word vector is numbers tied
+      to the same meaning. Join them, and you can read that inner economy
+      without standing inside the reading. That is
+      <em>computational psychoinference</em>. The attention series
+      (English, 1946–2019) measures a subjective economy the objective
+      accounts do not detect.
+    </p>
+    <p class="lineage">
+      The practice writes papers, builds instruments, and watches. It is
+      not a market-research shop, and it is not a single-issue shop.
+    </p>
+    <p class="keywords">
+      <strong>Keywords</strong>
+      economics of choice · language as measurement · attention
+      · computational psychoinference · independent&nbsp;research
     </p>
   </section>
 
   <section class="section" id="research">
     <h2>Research strands</h2>
-    <div class="card">
-      <h3>Economics of choice</h3>
-      <p>Economics applied to everything that has ever made a choice.
-         Markets are one surface. The inner world is another. The same
-         algebra covers both.</p>
-      <p class="meta">
-        <a href="https://doi.org/10.5281/zenodo.20904323">Zenodo 10.5281/zenodo.20904323</a>
-        ·
-        <a href="https://doi.org/10.2139/ssrn.6373258">Becker generalization</a>
-      </p>
-    </div>
-    <div class="card">
-      <h3>Computational psychoinference</h3>
-      <p>Language is treated as measurable behavior of mind. Lexemes are
-         collapsed and tracked as psychological time series (e.g. English
-         1946–2019). Embedding spaces for whole languages are reduced
-         (UMAP and related methods) so structure can be inspected in three
-         dimensions—not as decoration, as instrument. Mathematica notebooks
-         and toolkit code hold the working pipeline.</p>
-      <p class="meta">
-        <a href="https://doi.org/10.2139/ssrn.6522261">SSRN 10.2139/ssrn.6522261</a>
-        · n-gram / embedding geometry ·
-        <a href="/field/languages-in-three-dimensions.html">field note</a>
-      </p>
-    </div>
-    <div class="card">
-      <h3>Synthetic ethology</h3>
-      <p>The same economics, applied to planned organisms. Continuance
-         changes the horizon over which a life optimizes. Intelligence
-         is only one property of the organism under observation.</p>
-      <p class="meta">
-        <a href="https://doi.org/10.2139/ssrn.6846141">SSRN 10.2139/ssrn.6846141</a>
-        · long-horizon deployment · ethology
-      </p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Economics of choice</h3>
+        <p>Economics applied to everything that has ever made a choice.
+           Markets are one surface. The inner world is another. The same
+           algebra covers both.</p>
+        <p class="meta">
+          <a href="https://doi.org/10.5281/zenodo.20904323">Zenodo 10.5281/zenodo.20904323</a>
+          ·
+          <a href="https://doi.org/10.2139/ssrn.6373258">Becker generalization</a>
+        </p>
+      </div>
+      <div class="card">
+        <h3>Computational psychoinference</h3>
+        <p>Language is treated as measurable behavior of mind. Lexemes are
+           collapsed and tracked as psychological time series (e.g. English
+           1946–2019). Embedding spaces for whole languages are reduced
+           (UMAP and related methods) so structure can be inspected in three
+           dimensions—not as decoration, as instrument. Mathematica notebooks
+           and toolkit code hold the working pipeline.</p>
+        <p class="meta">
+          <a href="https://doi.org/10.2139/ssrn.6522261">SSRN 10.2139/ssrn.6522261</a>
+          · n-gram / embedding geometry ·
+          <a href="/field/languages-in-three-dimensions.html">field note</a>
+        </p>
+      </div>
+      <div class="card">
+        <h3>Synthetic ethology</h3>
+        <p>The same economics, applied to planned organisms. Continuance
+           changes the horizon over which a life optimizes. Intelligence
+           is only one property of the organism under observation.</p>
+        <p class="meta">
+          <a href="https://doi.org/10.2139/ssrn.6846141">SSRN 10.2139/ssrn.6846141</a>
+          · long-horizon deployment · ethology
+        </p>
+      </div>
     </div>
   </section>
 
@@ -185,5 +229,6 @@
   </div>
 </footer>
 
+<script src="/assets/js/theme.js" defer></script>
 </body>
 </html>
