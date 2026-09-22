@@ -21,12 +21,12 @@ if(t)document.documentElement.setAttribute("data-preboot",t);}catch(e){}})();
 </script>
 <style>
 /* Applies the pre-boot value to <body> the instant the body tag is parsed,
-   without waiting for the deferred script. */
-html[data-preboot="dark"] body.theme-light{--ground:#14120e;--panel:#1c1913;--panel-2:#221e16;--brass:#c89b3c;--gold:#e8d5a3;--cream:#e3dac4;--ink:#e3dac4;--muted:#9a8f75;--line:#3a3324;--cite:#8a7f68;--btn-ink:#1a1509}
-html[data-preboot="dark"] body.theme-light a{color:#e8d5a3}
+   without waiting for the deferred script. The page is night by default now,
+   so the value that must beat first paint is a stored LIGHT override. */
+html[data-preboot="light"] body.theme-night{--ground:#f6f1e6;--panel:#fffdf8;--panel-2:#efe8d8;--brass:#a67c28;--gold:#3d3426;--cream:#2c261c;--ink:#2c261c;--muted:#6e6554;--line:#ddd2bc;--cite:#7a7160;--btn-ink:#1a1509;--link-underline:rgba(166,124,40,0.4);--selection-bg:rgba(200,155,60,0.22)}
 </style>
 </head>
-<body class="font-optima-paper theme-light">
+<body class="font-old-standard theme-night">
 
 <nav class="nav wrap">
   <a href="/">Home</a>

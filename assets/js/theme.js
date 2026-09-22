@@ -27,13 +27,25 @@
     return window.matchMedia &&
            window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
+
+  // A theme-night page is dark BY DEFAULT (Ara's direction, 2026-09-22):
+  // its baseline is "dark" regardless of the reader's system, and the
+  // toggle overrides that. Other pages keep following the system.
+  var nightDefault = root.classList.contains("theme-night");
+  function baseTheme() {
+    return nightDefault ? "dark" : (systemIsDark() ? "dark" : "light");
+  }
   function active() {
-    return stored() || (systemIsDark() ? "dark" : "light");
+    return stored() || baseTheme();
   }
 
   function apply(v) {
     if (v) root.setAttribute("data-theme", v);
     else root.removeAttribute("data-theme");
+    // Once the real toggle governs, the pre-boot hint must not linger:
+    // a stale data-preboot outranks the stylesheet and would pin the page
+    // to the boot-time theme after the reader toggles away from it.
+    document.documentElement.removeAttribute("data-preboot");
   }
 
   function label(btn) {
@@ -56,10 +68,12 @@
   label(btn);
   btn.addEventListener("click", function () {
     var next = active() === "dark" ? "light" : "dark";
-    // If the reader's choice matches their system, drop the override so the
-    // site goes back to following the machine.
-    var sys = systemIsDark() ? "dark" : "light";
-    store(next === sys ? null : next);
+    // If the reader's choice matches the page's baseline (night pages:
+    // dark; others: the system), drop the override so the page goes back
+    // to its default. Storing the baseline itself would have made "Day"
+    // a no-op on a system-light machine: store("light"), baseline dark,
+    // and the null round-trip shows dark again.
+    store(next === baseTheme() ? null : next);
     apply(stored());
     label(btn);
   });

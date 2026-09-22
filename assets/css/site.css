@@ -97,8 +97,11 @@
   color-scheme: light dark;
 }
 
-/* Light paper scheme — same brass lineage, readable day surface */
-body.theme-light {
+/* Light paper scheme — same brass lineage, readable day surface.
+   Also the explicit day OVERRIDE for the night-default root (theme-night):
+   one selector list so the paper palette has a single source. */
+body.theme-light,
+body.theme-night[data-theme="light"] {
   --ground: #f6f1e6;       /* warm paper */
   --panel: #fffdf8;
   --panel-2: #efe8d8;
@@ -173,6 +176,58 @@ body.theme-light[data-theme="dark"] {
 body.theme-light[data-theme="dark"] a { color: var(--gold); }
 body.theme-light[data-theme="dark"] a:hover { color: var(--brass); }
 
+/* ── Night-default + one ink (2026-09-22, Ara's direction) ────────────────
+   Ara, steering the open brief, three moves as a set:
+     1. Dark ground — not conditionally dark. theme-night pages are dark by
+        default; the toggle OVERRIDES to paper instead of following the
+        system. No cyan, no glow: the palette stays the warm brass lineage.
+     2. One ink. The Ostanek Research mark is a waveform in a single color;
+        the page now holds the same discipline. Text and headings are one
+        ink on the ground. Brass appears at rest in exactly ONE place (the
+        eyebrow) and otherwise only answers the reader: hover underlines,
+        the focus ring, selection. Never decoratively.
+     3. Old Standard TT on the modern ground — set via body.font-old-standard
+        on the page, not here.
+   Every rule is scoped under body.theme-night, so the other pages keep
+   their current dress by selector construction, not by hope. */
+body.theme-night { color-scheme: dark; }
+body.theme-night[data-theme="light"] { color-scheme: light; }
+
+/* One ink: links are the reading ink, underlined; brass only on approach. */
+body.theme-night { --link-underline: color-mix(in oklab, var(--ink) 32%, transparent); }
+body.theme-night a { color: var(--ink); }
+body.theme-night a:hover { color: var(--ink); text-decoration-color: var(--brass); }
+body.theme-night .nav a { color: var(--muted); }
+body.theme-night .nav a:hover { color: var(--ink); border-bottom-color: var(--brass); }
+body.theme-night .theme-toggle:hover { color: var(--ink); border-color: var(--brass); }
+
+/* Headings and labels: ink and muted, no gold, no brass at rest. */
+body.theme-night .thesis-display,
+body.theme-night .card h3,
+body.theme-night .pub-list .pub-title,
+body.theme-night .masthead h1 { color: var(--ink); }
+body.theme-night .section > h2,
+body.theme-night .keywords strong { color: var(--muted); }
+body.theme-night .facts > div { border-left-color: var(--line); }
+body.theme-night .card-grid .card:hover {
+  border-color: var(--line);
+}
+body.theme-night .pub-list .pub-venue {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--hairline);
+}
+
+/* The 2026-08 lockup was drawn for paper — its wordmark is stroked near-black
+   and vanishes on the night ground ("do not sit the gold/sage wave on a black
+   theater"). So on dark it keeps its paper: a plate under the mark, which in
+   the day override is the exact ground color and disappears. */
+body.theme-night header.masthead.masthead-lockup img {
+  background: #f6f1e6;
+  border-radius: var(--radius);
+  padding: clamp(16px, 2.5vw, 28px);
+}
+
 /* Per-post / per-page font choices (beauty = value) */
 /* Junicode 2 — Peter Baker's scholarly face for medievalists (SIL OFL).
    Kevin, 2026-08-13: "I like this font in general, maybe for the website
@@ -222,6 +277,13 @@ body.font-old-standard article.note .body p {
   line-height: 1.72;
 }
 body.font-old-standard .card h3 { font-size: var(--step-1); }
+/* At display size the Didone carries its own tightness — the -0.02em tracking
+   .thesis-display inherits was tuned for a humanist sans and pinches Old
+   Standard's serifs together. Let the face breathe. */
+body.font-old-standard .thesis-display {
+  letter-spacing: 0;
+  line-height: 1.1;
+}
 body.font-junicode { --body-font: "Junicode", "EB Garamond", Georgia, serif; }
 body.font-georgia { --body-font: Georgia, "Times New Roman", serif; }
 body.font-system-serif { --body-font: ui-serif, Georgia, serif; }
