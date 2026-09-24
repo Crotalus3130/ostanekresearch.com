@@ -509,7 +509,7 @@ h1, h2, h3 { font-weight: 400; text-wrap: balance; margin: 0; font-family: var(-
    4rem would have silently restyled a page nobody asked me to touch. */
 .thesis-display {
   margin: 0;
-  max-width: min(20ch, 100%);
+  max-width: min(28ch, 100%); /* was 20ch: stacked the root thesis into a narrow column (Kevin, 09-23) */
   color: var(--gold);
   font-size: var(--step-4);
   line-height: 1.04;
@@ -519,7 +519,7 @@ h1, h2, h3 { font-weight: 400; text-wrap: balance; margin: 0; font-family: var(-
 }
 .masthead .lineage {
   margin-top: 16px;
-  max-width: min(68ch, 100%);
+  max-width: min(72ch, 100%); /* back to the pre-restyle measure */
   color: var(--muted);
   font-size: var(--step-0);
   font-style: normal;
