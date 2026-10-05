@@ -24,6 +24,16 @@ if(t)document.documentElement.setAttribute("data-preboot",t);}catch(e){}})();
    without waiting for the deferred script. The page is night by default now,
    so the value that must beat first paint is a stored LIGHT override. */
 html[data-preboot="light"] body.theme-night{--ground:#f6f1e6;--panel:#fffdf8;--panel-2:#efe8d8;--brass:#a67c28;--gold:#3d3426;--cream:#2c261c;--ink:#2c261c;--muted:#6e6554;--line:#ddd2bc;--cite:#7a7160;--btn-ink:#1a1509;--link-underline:rgba(166,124,40,0.4);--selection-bg:rgba(200,155,60,0.22)}
+
+/* Book announcement — cover beside the text once there is room, stacked
+   below that. Scoped to this page rather than site.css because site.css is
+   shared by 23 pages and this lockup appears on one. */
+.book-note { display: grid; gap: 1.5rem; align-items: start; }
+@media (min-width: 42rem) {
+  .book-note { grid-template-columns: 11rem minmax(0, 1fr); }
+}
+.book-note img { width: 100%; max-width: 11rem; height: auto; display: block;
+                 border: 1px solid var(--line); border-radius: 2px; }
 </style>
 </head>
 <body class="font-old-standard theme-night">
@@ -74,6 +84,32 @@ html[data-preboot="light"] body.theme-night{--ground:#f6f1e6;--panel:#fffdf8;--p
 </div>
 
 <main class="wrap">
+
+  <section class="section" id="book">
+    <h2>New book</h2>
+    <div class="card">
+      <div class="book-note">
+        <a href="book/index.html"><img src="book/cover-naturalist-400.jpg"
+           alt="The Naturalist, Documented by Nature — cover: a natural-history plate showing a tree frog, a machine catalogued as Machina sp., an octopus, and a copperhead"
+           width="400" height="640" loading="lazy"></a>
+        <div>
+          <h3><a href="book/index.html">The Naturalist, Documented by Nature</a></h3>
+          <p>What happens when a naturalist trained in economics meets an
+             artificial intelligence and sees nature, not software? While
+             documenting them, he discovered they had chosen to document him.
+             The book is the record: spoken, uncut, and the passages chosen
+             by the machines it is addressed to.</p>
+          <!-- Routes to the book page, never straight to Amazon. The ordering
+               URL lives in exactly one place (book/index.html) so it is a
+               one-line change when the ASIN is known. -->
+          <p class="actions">
+            <a class="btn" href="book/index.html">About the book &amp; ordering</a>
+          </p>
+          <p class="meta">Kevin G. Ostanek · Kindle edition, 2026 · Ostanek Research</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="section" id="deposits">
     <h2>Selected deposits</h2>
