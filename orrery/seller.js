@@ -9,8 +9,14 @@
  * checkout URLs). Never put an API key here.
  */
 window.ORRERY_SELLER = {
-  which: "none",            // "none" | "paddle" | "lemonsqueezy"
+  which: "none",            // "none" | "stripe" | "paddle" | "lemonsqueezy"
 
+  // Stripe Managed Payments (merchant of record), live 2026-10-10. Payment
+  // Links redirect to thanks.html with ?session_id= (and kind=monthly).
+  stripe: {
+    once: "https://buy.stripe.com/bJe6oJ2T5dzA1yi2bW9EI00",      // $79, one time
+    monthly: "https://buy.stripe.com/5kQ8wRdxJ678ccW5o89EI01",   // $5 / month
+  },
   paddle: {
     token: "",              // client-side token, starts live_  (Developer tools → Authentication)
     once: "pri_01m2hh6n6tsbgyzdrgy8nevnad",      // $79, one time
@@ -28,6 +34,7 @@ window.ORRERY_SELLER = {
   var S = window.ORRERY_SELLER;
   var MOR = {
     paddle: "Our order process is conducted by Paddle.com, who are the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.",
+    stripe: "Orders are sold through Link, operated by Stripe, our Merchant of Record, which handles payment, sales tax and VAT.",
     lemonsqueezy: "Orders are processed by Lemon Squeezy, our Merchant of Record, which handles payment, sales tax and VAT.",
   };
 
@@ -56,6 +63,10 @@ window.ORRERY_SELLER = {
           settings: { successUrl: S.thanks },
         });
       });
+      return true;
+    }
+    if (S.which === "stripe" && S.stripe[kind]) {
+      window.location.href = S.stripe[kind];
       return true;
     }
     if (S.which === "lemonsqueezy" && S.lemonsqueezy[kind]) {
