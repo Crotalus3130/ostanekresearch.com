@@ -9,7 +9,7 @@
  * checkout URLs). Never put an API key here.
  */
 window.ORRERY_SELLER = {
-  which: "none",            // "none" | "stripe" | "paddle" | "lemonsqueezy"
+  which: "stripe",          // "none" | "stripe" | "paddle" | "lemonsqueezy"   — LIVE 2026-10-10
 
   // Stripe Managed Payments (merchant of record), live 2026-10-10. Payment
   // Links redirect to thanks.html with ?session_id= (and kind=monthly).

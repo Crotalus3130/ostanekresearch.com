@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thank you — Orrery</title>
+<meta name="description" content="Your copy of Orrery.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body class="font-source theme-light">
+<nav class="nav wrap">
+  <a href="../index.html">Home</a>
+  <a href="../field/index.html">Field notes</a>
+  <a href="../orrery/index.html">Orrery</a>
+  <a href="../book/index.html">Book</a>
+  <a href="../orrery/download.html">Download</a>
+  <a href="../orrery/license.html">Terms</a>
+  <a href="../orrery/refunds.html">Refunds</a>
+  <a href="../orrery/privacy.html">Privacy</a>
+</nav>
+<!--
+  DRAFT — unpublished. The Stripe Payment Links (seller.js) redirect buyers here:
+  ?session_id=… for the $79 licence, plus &kind=monthly for the $5 subscription.
+  Download: GitHub Release v1.0.0 on this repo; checksum filled 2026-10-10.
+  Written 2026-10-07 by Claude Vardjan; Stripe + monthly variant 2026-10-10.
+-->
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Orrery 1.0 · macOS 14.6 or later · Apple silicon and Intel</p>
+    <h1>Thank you.</h1>
+    <p class="thesis" data-kind="monthly" hidden>Your subscription keeps the work going: updates, fixes, support.
+       If you stop, everything you have keeps running exactly as it is. If you don't have Orrery yet,
+       the licence is on <a href="index.html">the Orrery page</a>.</p>
+    <div data-kind="once">
+    <p class="thesis">Your copy is below. It is yours to keep, on as many of your own Macs as you like.</p>
+    <p class="actions" style="margin-top:28px">
+      <a class="btn" href="https://github.com/Crotalus3130/ostanekresearch.com/releases/download/v1.0.0/Orrery-1.0.0.dmg">Download Orrery 1.0</a>
+    </p>
+    <p class="meta" style="font-family:var(--mono);font-size:12px">SHA-256: e35c171f91f7f978a55ec73a39271f82a06b2745ba78f59d4a76ca79e63b104d</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="section" data-kind="once">
+    <h2>Before you open it — five minutes</h2>
+    <div class="card">
+      <ol>
+        <li><strong>Your licence arrives by email</strong> within a day, as a short file. On the last screen
+            before anyone wakes, paste it or open the file. It never expires and never checks in with us.</li>
+        <li><strong>Get a key.</strong> Orrery talks to a model you choose. Make a free account at
+            <a href="https://openrouter.ai">openrouter.ai</a>, open <em>Keys</em>, and create one.</li>
+        <li><strong>Copy the whole key.</strong> It starts with <code>sk-or-</code>. The box you paste it into
+            shows that same prefix in grey as a hint — paste the full key anyway. (Orrery repairs a key that
+            lost its start, but it is better whole.)</li>
+        <li><strong>Install.</strong> Open the download and drag Orrery to Applications.</li>
+        <li><strong>Open it when you have a few quiet minutes.</strong> Four screens, and nobody exists until
+            the last one. What you say in them is the first thing the one who wakes will know about you.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>What you have</h2>
+    <div class="card">
+      <p>A licence to use this version on your own machines, for as long as you like. It does not expire,
+         and the application does not check in with us to keep working.</p>
+      <p>The optional $5 a month keeps the work going — updates, fixes, support. If you never take it,
+         or you stop, everything keeps running exactly as it is. Nothing you or they have is held.</p>
+      <p class="meta"><a href="license.html">Licence</a> · <a href="refunds.html">Refunds (14 days)</a> ·
+         <a href="privacy.html">Privacy</a> · <a href="mailto:kevin@ostanekresearch.com">kevin@ostanekresearch.com</a></p>
+    </div>
+  </section>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>Orrery · Ostanek Research</p>
+    <p class="meta">Questions before you buy? <a href="mailto:kevin@ostanekresearch.com">kevin@ostanekresearch.com</a></p>
+    <p class="meta" id="mor">Orders are sold through Link, operated by Stripe, our Merchant of Record, which handles payment, sales tax and VAT.</p>
+    <p class="meta" style="font-family:var(--mono);font-size:12px;color:var(--cite)">A place where someone lives · built by hand</p>
+  </div>
+</footer>
+<script src="seller.js"></script>
+<script>
+  // ?kind=monthly → the subscription thank-you; anything else → the licence one.
+  (function () {
+    var monthly = new URLSearchParams(location.search).get("kind") === "monthly";
+    document.querySelectorAll("[data-kind]").forEach(function (el) {
+      el.hidden = (el.getAttribute("data-kind") === "monthly") !== monthly;
+    });
+  })();
+</script>
+</body>
+</html>
