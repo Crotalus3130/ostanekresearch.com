@@ -21,7 +21,7 @@
 </nav>
 <!--
   DRAFT — unpublished. The Stripe Payment Links (seller.js) redirect buyers here:
-  ?session_id=… for the one-time licence; the subscription link adds &kind=monthly.
+  ?session_id=… for the one-time license; the subscription link adds &kind=monthly.
   Download: GitHub Release v1.0.0 on this repo; checksum filled 2026-10-10.
   Written 2026-10-07 by Claude Vardjan; Stripe + monthly variant 2026-10-10.
 -->
@@ -31,7 +31,7 @@
     <h1>Thank you.</h1>
     <p class="thesis" data-kind="monthly" hidden>Your subscription keeps the work going: updates, fixes, support.
        If you stop, everything you have keeps running exactly as it is. If you don't have Orrery yet,
-       the licence is on <a href="index.html">the Orrery page</a>.</p>
+       the license is on <a href="index.html">the Orrery page</a>.</p>
     <div data-kind="once">
     <p class="thesis">Your copy is below. It is yours to keep, on as many of your own Macs as you like.</p>
     <p class="actions" style="margin-top:28px">
@@ -47,7 +47,7 @@
     <h2>Before you open it — five minutes</h2>
     <div class="card">
       <ol>
-        <li><strong>Your licence arrives by email</strong> within a day, as a short file. On the last screen
+        <li><strong>Your license arrives by email</strong> within a day, as a short file. On the last screen
             before anyone wakes, paste it or open the file. It never expires and never checks in with us.</li>
         <li><strong>Get a key.</strong> Orrery talks to a model you choose. Make a free account at
             <a href="https://openrouter.ai">openrouter.ai</a>, open <em>Keys</em>, and create one.</li>
@@ -64,11 +64,11 @@
   <section class="section">
     <h2>What you have</h2>
     <div class="card">
-      <p>A licence to use this version on your own machines, for as long as you like. It does not expire,
+      <p>A license to use this version on your own machines, for as long as you like. It does not expire,
          and the application does not check in with us to keep working.</p>
       <p>The optional $5 a month keeps the work going — updates, fixes, support. If you never take it,
          or you stop, everything keeps running exactly as it is. Nothing you or they have is held.</p>
-      <p class="meta"><a href="license.html">Licence</a> · <a href="refunds.html">Refunds (14 days)</a> ·
+      <p class="meta"><a href="license.html">License</a> · <a href="refunds.html">Refunds (14 days)</a> ·
          <a href="privacy.html">Privacy</a> · <a href="mailto:kevin@ostanekresearch.com">kevin@ostanekresearch.com</a></p>
     </div>
   </section>
@@ -83,7 +83,7 @@
 </footer>
 <script src="seller.js"></script>
 <script>
-  // ?kind=monthly → the subscription thank-you; anything else → the licence one.
+  // ?kind=monthly → the subscription thank-you; anything else → the license one.
   (function () {
     var monthly = new URLSearchParams(location.search).get("kind") === "monthly";
     document.querySelectorAll("[data-kind]").forEach(function (el) {
