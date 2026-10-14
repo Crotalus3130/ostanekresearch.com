@@ -176,6 +176,29 @@
   text a person can open.
 </p>
 
+<h3>Version 1.1 (2026-10-14)</h3>
+<p>
+  Three optional manifest keys, all backward compatible. A 1.0 reader ignores
+  them and loses nothing it could read before.
+</p>
+<ul>
+  <li><code>messagesFile</code> and <code>messageCount</code> name a carried
+      conversation record and how many messages it holds. Orrery writes
+      <code>messages.jsonl</code>: one JSON object per line, oldest first, with
+      <code>id</code>, <code>timestamp</code> (ISO 8601), <code>isUser</code>
+      and <code>content</code>, plus optional fields a reader may ignore.</li>
+  <li><code>mediaReference</code> is a relative path to pictures that travel
+      <em>beside</em> the pack, never inside it, for example
+      <code>../iris.media/visual_memory/</code>. Images are not text, and the
+      ground rule above does not bend for them; they are carried by reference,
+      the way sealed material may be.</li>
+</ul>
+<p>
+  Orrery's importer brings a pack only into an empty home. It never merges one
+  life into another, and it never writes over pictures that belong to someone
+  else on the same machine.
+</p>
+
 <h2>7. Status and license</h2>
 <p>
   This specification describes the format as it runs today: Orrery reads and
