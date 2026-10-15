@@ -907,3 +907,16 @@ footer.site p { margin: 6px 0; }
   font-display: swap;
 }
 .math { font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", serif; font-style: normal; padding: 0 0.08em; }
+
+/* Adobe Caslon Pro — Kevin's Adobe Fonts kit tal0xmc, 2026-10-15, for the
+   articles. Pages opt in with the kit <link> plus body.font-caslon. Caslon
+   runs small on screen, so the scale is nudged up the way Old Standard's was. */
+body.font-caslon {
+  --body-font: "adobe-caslon-pro", "Adobe Caslon Pro", "EB Garamond", Georgia, serif;
+  --head-font: "adobe-caslon-pro", "Adobe Caslon Pro", "EB Garamond", Georgia, serif;
+  font-size: clamp(1.1rem, 1.05rem + 0.25vw, 1.28rem);
+  line-height: 1.66;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+body.font-caslon h1, body.font-caslon h2, body.font-caslon h3,
+body.font-caslon article h1 { font-family: var(--head-font); font-weight: 600; }
