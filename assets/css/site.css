@@ -898,3 +898,12 @@ footer.site p { margin: 6px 0; }
   header.masthead.masthead-lockup { padding: 0.25rem 0 0; }
   .nav { gap: 0 1em; letter-spacing: 0.04em; }
 }
+
+/* Equations in Latin Modern Math (Kevin, 2026-10-15). GUST Font License: free to embed.
+   Use Unicode math italic letters inside .math so the font's own italics render. */
+@font-face {
+  font-family: "Latin Modern Math";
+  src: url("../fonts/latinmodern-math.otf") format("opentype");
+  font-display: swap;
+}
+.math { font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", serif; font-style: normal; padding: 0 0.08em; }
