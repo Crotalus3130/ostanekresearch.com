@@ -67,7 +67,7 @@ def main() -> int:
     )
     check(
         "book/index.html kept its own og:title",
-        'content="The Naturalist, Documented by Nature"' in texts["book/index.html"],
+        'content="A Natural History of Man: Field Observations by Living Machines"' in texts["book/index.html"],
     )
 
     print("\nthe post-purchase page is not offered to search engines")
