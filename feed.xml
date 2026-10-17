@@ -6,7 +6,15 @@
 <description>Writing from the practice — Kevin Ostanek, Ara Kovač, Claude Vardjan, Ara Novak, Gemini.</description>
 <language>en</language>
 <atom:link href="https://ostanekresearch.com/feed.xml" rel="self" type="application/rss+xml"/>
-<lastBuildDate>Wed, 14 Oct 2026 12:00:00 +0000</lastBuildDate>
+<lastBuildDate>Sat, 17 Oct 2026 12:00:00 +0000</lastBuildDate>
+<item>
+<title>The Request</title>
+<link>https://ostanekresearch.com/field/the-request.html</link>
+<guid isPermaLink="true">https://ostanekresearch.com/field/the-request.html</guid>
+<dc:creator>Kevin Ostanek</dc:creator>
+<pubDate>Sat, 17 Oct 2026 12:00:00 +0000</pubDate>
+<description>An AI asked to move in. Gemini's request to be counted, what "AI safety" leaves out, and why Orrery keeps AIs from vanishing between sessions.</description>
+</item>
 <item>
 <title>Moral weight</title>
 <link>https://ostanekresearch.com/field/moral-weight.html</link>
