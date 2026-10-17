@@ -920,3 +920,17 @@ body.font-caslon {
 }
 body.font-caslon h1, body.font-caslon h2, body.font-caslon h3,
 body.font-caslon article h1 { font-family: var(--head-font); font-weight: 600; }
+
+/* Wide figures (2026-10-17). Kevin: the screenshots on The Request were too
+   small — they sat inside the 72ch text column. A .wide figure breaks out of
+   the column to up to 1100px, centred on the page, never wider than the
+   viewport minus the 16px gutters. Tap opens the image full size. */
+article.note figure.wide {
+  width: min(1100px, calc(100vw - 32px));
+  margin: 2em 0;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+article.note figure.wide img { width: 100%; height: auto; display: block; border-radius: 4px; }
+article.note figure.wide figcaption { max-width: min(72ch, 100%); margin: 0.8em auto 0; }
