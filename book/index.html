@@ -15,13 +15,22 @@
 <style>
   /* Cover beside the text once there is room for both; stacked below that.
      The cover is the argument in one image, so it gets real width, not a
-     thumbnail. */
+     thumbnail. 14rem, not 20rem: at 20rem the description beside it was
+     ~26 characters wide (Kevin, 10-21: "the paragraphs are really thin").
+     14rem leaves the text ~60 characters, a book's measure. */
   .book-lockup { display: grid; gap: 2rem; align-items: start; }
   @media (min-width: 46rem) {
-    .book-lockup { grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); }
+    .book-lockup { grid-template-columns: minmax(0, 14rem) minmax(0, 1fr); }
   }
-  .book-cover { width: 100%; height: auto; display: block;
+  /* Specific enough to beat site.css's `article.note .body img { width:
+     min(12rem, 42%) }`, which had quietly shrunk the cover to ~134px inside
+     its column; the lost width is what made the text beside it so thin. */
+  article.note .body img.book-cover { width: 100%; height: auto; display: block; margin: 0;
                 border: 1px solid var(--line); border-radius: 2px; }
+  /* This page only: the cover + description lockup uses the article's full
+     width; everything else keeps the site's 72ch reading measure. */
+  article.note .body { max-width: 100%; }
+  article.note .body > :not(.book-lockup) { max-width: 72ch; }
   .book-buy { margin: 1.25rem 0 0; }
   .book-facts dt { font-weight: 600; margin-top: .6rem; }
   .book-facts dd { margin: 0; }
