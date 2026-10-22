@@ -5,6 +5,10 @@
  * `which` below — nothing else on the site changes. Until then it is "none"
  * and the page behaves exactly as before (buttons scroll to the price section).
  *
+ * 2026-10-10: neither approved. Stripe Managed Payments went live instead and
+ * `which` is "stripe" — the paragraph above is the record of how we got here,
+ * not the current state. Read `which`, never this comment.
+ *
  * Everything in this file is PUBLIC by design (price IDs, client-side token,
  * checkout URLs). Never put an API key here.
  */
@@ -36,6 +40,25 @@ window.ORRERY_SELLER = {
     paddle: "Our order process is conducted by Paddle.com, who are the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.",
     stripe: "Orders are sold through Link, operated by Stripe, our Merchant of Record, which handles payment, sales tax and VAT.",
     lemonsqueezy: "Orders are processed by Lemon Squeezy, our Merchant of Record, which handles payment, sales tax and VAT.",
+  };
+  // Every other merchant-specific sentence on the site. Added 2026-10-22: the
+  // 10-10 swap to Stripe corrected #mor on download.html and left refunds.html
+  // — which carries MORE of these sentences than download.html does — naming
+  // Paddle to every visitor, because that page was never wired to this file.
+  // A page about money must be true before any script runs, so each page now
+  // ships the live merchant's wording as its own text and these only re-state
+  // it. Switching `which` rewrites all three ids; there is no fourth place.
+  var LINES = {
+    "card-statement": {
+      paddle: "Your card statement will show Paddle, not Ostanek Research.",
+      stripe: "Your card statement will show Stripe, not Ostanek Research.",
+      lemonsqueezy: "Your card statement will show Lemon Squeezy, not Ostanek Research.",
+    },
+    "refund-route": {
+      paddle: "You can also request a refund directly through Paddle using the receipt they emailed you.",
+      stripe: "You can also request a refund using the receipt Stripe emailed you.",
+      lemonsqueezy: "You can also request a refund through Lemon Squeezy using the receipt they emailed you.",
+    },
   };
 
   function ready(fn) { document.readyState !== "loading" ? fn() : document.addEventListener("DOMContentLoaded", fn); }
@@ -82,9 +105,14 @@ window.ORRERY_SELLER = {
         if (buy(el.getAttribute("data-buy"))) e.preventDefault();
       });
     });
+    // "none" leaves every page's own line alone: the HTML is the truthful
+    // default, not a placeholder, so a dead script degrades to correct text.
     var mor = document.getElementById("mor");
-    // "none" leaves the page's own line alone — Paddle's reviewers still read it.
     if (mor && MOR[S.which]) mor.textContent = MOR[S.which];
+    Object.keys(LINES).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && LINES[id][S.which]) el.textContent = LINES[id][S.which];
+    });
     var live = S.which !== "none";
     document.querySelectorAll("[data-when-live]").forEach(function (el) { el.hidden = !live; });
     document.querySelectorAll("[data-when-not-live]").forEach(function (el) { el.hidden = live; });

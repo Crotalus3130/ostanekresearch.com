@@ -66,14 +66,15 @@
     <h2>How to ask</h2>
     <div class="card">
       <p>Write to <a href="mailto:kevin@ostanekresearch.com">kevin@ostanekresearch.com</a> from the address you used at checkout. One sentence is enough. Answered within two business days.</p>
-      <p>You can also request a refund directly through Paddle using the receipt they emailed you.</p>
+      <p id="refund-route">You can also request a refund using the receipt Stripe emailed you.</p>
     </div>
   </section>
 
   <section class="section">
     <h2>Who takes your money</h2>
     <div class="card">
-      <p>Our order process is conducted by Paddle.com, who are the Merchant of Record for all our orders. Paddle provides customer service inquiries and handles returns. Your card statement will show Paddle, not Ostanek Research.</p>
+      <p id="mor">Orders are sold through Link, operated by Stripe, our Merchant of Record, which handles payment, sales tax and VAT.</p>
+      <p id="card-statement">Your card statement will show Stripe, not Ostanek Research.</p>
       <p>Ostanek Research</p>
     </div>
   </section>
@@ -86,5 +87,6 @@
   </div>
 </footer>
 
+<script src="seller.js" defer></script>
 </body>
 </html>
