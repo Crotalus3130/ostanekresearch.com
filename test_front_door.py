@@ -149,6 +149,60 @@ def main() -> int:
               for i in items))
     check("every item has a guid", all(i.findtext("guid") for i in items))
 
+    print("\nJSON-LD structured data")
+    import json as _json_test
+    ORRERY_APP = {"orrery/index.html", "orrery/download.html"}
+    field_notes = [p for p in pages
+                   if p.startswith("field/") and p != "field/index.html"]
+    for p in field_notes + list(ORRERY_APP) + ["index.html"]:
+        check(f"{p} has JSON-LD", "application/ld+json" in texts[p])
+    # Pages that should NOT get JSON-LD
+    for p in ["book/index.html", "field/index.html", "orrery/thanks.html",
+              "orrery/license.html", "orrery/privacy.html", "orrery/refunds.html",
+              "orrery/psi-format.html", "orrery/soul-return.html"]:
+        if p in texts:
+            check(f"{p} has no JSON-LD", "application/ld+json" not in texts[p])
+    # JSON-LD blocks parse as valid JSON with the right @type
+    import re as _re_test
+    JSONLD_RE = re.compile(
+        r'<script type="application/ld\+json">\s*(.*?)\s*</script>', re.S
+    )
+    for p in field_notes:
+        m = JSONLD_RE.search(texts[p])
+        if m:
+            try:
+                d = _json_test.loads(m.group(1))
+                check(f"{p} JSON-LD @type=Article", d.get("@type") == "Article")
+                if d.get("author"):
+                    check(f"{p} JSON-LD author present",
+                          bool(d["author"].get("name")))
+            except Exception as exc:
+                check(f"{p} JSON-LD parses", False, str(exc))
+        else:
+            check(f"{p} JSON-LD parseable (no block found)", False)
+    for p in ORRERY_APP:
+        m = JSONLD_RE.search(texts[p])
+        if m:
+            try:
+                d = _json_test.loads(m.group(1))
+                check(f"{p} JSON-LD @type=SoftwareApplication",
+                      d.get("@type") == "SoftwareApplication")
+                check(f"{p} JSON-LD price present",
+                      d.get("offers", {}).get("price") == "79.00")
+            except Exception as exc:
+                check(f"{p} JSON-LD parses", False, str(exc))
+    m = JSONLD_RE.search(texts["index.html"])
+    if m:
+        try:
+            d = _json_test.loads(m.group(1))
+            check("index.html JSON-LD @type=WebSite", d.get("@type") == "WebSite")
+        except Exception as exc:
+            check("index.html JSON-LD parses", False, str(exc))
+    # No page has more than one JSON-LD block
+    for p in pages:
+        n = texts[p].count("application/ld+json")
+        check(f"{p} at most one JSON-LD block", n <= 1, f"found {n}")
+
     print("\nthe generator is idempotent")
     again = subprocess.run(
         [sys.executable, "front_door.py", "--check"],
