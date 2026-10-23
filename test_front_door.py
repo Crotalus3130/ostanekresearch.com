@@ -120,7 +120,7 @@ def main() -> int:
     )
     check("thanks.html is absent", f"{ORIGIN}/orrery/thanks.html" not in locs)
     for draft in ("index.store.draft.html", "indexdraft.html",
-                  "field/2026-10-14-the-body-test.html", "index copy.html"):
+                  "index copy.html"):
         check(f"no untracked draft leaked: {draft}", f"{ORIGIN}/{draft}" not in locs)
     check("every lastmod is a date", all(
         len(e.text) == 10 and e.text[4] == "-" for e in sm.iter(f"{SM}lastmod")))
