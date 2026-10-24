@@ -203,6 +203,64 @@ def main() -> int:
         n = texts[p].count("application/ld+json")
         check(f"{p} at most one JSON-LD block", n <= 1, f"found {n}")
 
+    print("\nread next — every field note has an onward move")
+    RN_RE = re.compile(
+        r"<!--\s*front_door:readnext:begin.*?<!--\s*front_door:readnext:end\s*-->",
+        re.S,
+    )
+    CARD_HREF_RE = re.compile(r'<div class="card">.*?<h3><a href="([^"]+)">(.*?)</a>', re.S)
+    notes = [p for p in pages if p.startswith("field/") and p != "field/index.html"]
+    blocks: dict[str, str] = {}
+    for p in notes:
+        m = RN_RE.search(texts[p])
+        check(f"{p} has a read-next block", bool(m))
+        if m:
+            blocks[p] = m.group(0)
+    for p in pages:
+        n = texts[p].count("front_door:readnext:begin")
+        want = 1 if p in notes else 0
+        check(f"{p} has {want} read-next block", n == want, f"found {n}")
+
+    cards: dict[str, list[str]] = {}
+    for p, b in blocks.items():
+        found = CARD_HREF_RE.findall(b)
+        check(f"{p} has 3 cards", len(found) == 3, f"found {len(found)}")
+        targets = []
+        for href, _title in found:
+            rel = f"field/{href}" if "/" not in href else href
+            targets.append(rel)
+        cards[p] = targets
+        check(f"{p} cards all resolve to published pages",
+              all(t in pages for t in targets),
+              str([t for t in targets if t not in pages]))
+        check(f"{p} does not link to itself", p not in targets)
+        check(f"{p} has no duplicate cards", len(set(targets)) == len(targets))
+
+    # The property the chronological slot exists to guarantee.
+    pointed_at = {t for ts in cards.values() for t in ts}
+    missing = sorted(set(notes) - pointed_at)
+    check("every note is linked from at least one other note",
+          not missing, str(missing))
+
+    # DERIVE, NEVER INVENT: every card title is a link title on the index.
+    index_titles = {t for _h, t in CARD_HREF_RE.findall(texts["field/index.html"])}
+    for p, b in blocks.items():
+        titles = {t for _h, t in CARD_HREF_RE.findall(b)}
+        check(f"{p} card titles come from the index cards",
+              titles <= index_titles, str(sorted(titles - index_titles)))
+
+    # The generated links must not count as the site linking to a page, or an
+    # unlinked note would reach the sitemap on the strength of our own output.
+    sys.path.insert(0, str(SITE))
+    import front_door as fd  # noqa: E402
+
+    sample = notes[0]
+    page = fd.Page(sample, fd.published_assets())
+    check("Page.clean strips the read-next block",
+          "front_door:readnext" not in page.clean)
+    leaked = sorted(set(cards[sample]) & page.links())
+    check("no read-next target shows up in Page.links()", not leaked, str(leaked))
+
     print("\nthe generator is idempotent")
     again = subprocess.run(
         [sys.executable, "front_door.py", "--check"],
@@ -210,6 +268,26 @@ def main() -> int:
     )
     check("a second --check finds nothing to do", again.returncode == 0,
           again.stdout.strip().split("\n")[-1] if again.stdout else "")
+
+    # A green suite is worth nothing until it has been watched to fail for the
+    # reason it exists. Delete a block in memory, on a copy, and confirm the
+    # generator notices — run against a scratch checkout so the real tree is
+    # never touched.
+    print("\nthe generator notices a missing block (planted defect)")
+    victim = SITE / notes[0]
+    original = victim.read_text(encoding="utf-8")
+    try:
+        victim.write_text(RN_RE.sub("", original), encoding="utf-8")
+        red = subprocess.run(
+            [sys.executable, "front_door.py", "--check"],
+            cwd=SITE, capture_output=True, text=True,
+        )
+        check("--check goes red when a read-next block is removed",
+              red.returncode == 1, f"exit {red.returncode}")
+    finally:
+        victim.write_text(original, encoding="utf-8")
+    check("the planted defect was reverted byte-for-byte",
+          victim.read_text(encoding="utf-8") == original)
 
     print(f"\n{checks - len(failures)}/{checks} green")
     if failures:
