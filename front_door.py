@@ -94,6 +94,13 @@ NOINDEX = {"orrery/thanks.html"}
 # The page the crawl starts from when working out what the site links to.
 ROOTS = ["index.html"]
 
+# Analytics counter URL (GoatCounter). Set once to add cookie-free page-view
+# counting to every page. Steps: (1) create a free account at goatcounter.com,
+# (2) set this to your count URL, (3) run `python3 front_door.py --write`,
+# (4) commit and push. Leave empty to disable. No account = no data collected.
+# Example: GOATCOUNTER_URL = "https://ostanekresearch.goatcounter.com/count"
+GOATCOUNTER_URL = ""
+
 
 # ---------------------------------------------------------------- git helpers
 
@@ -316,6 +323,12 @@ class Page:
         ld = self.jsonld()
         if ld and not self.has("application/ld+json"):
             add(ld)
+
+        if GOATCOUNTER_URL and not self.has("gc.zgo.at/count.js"):
+            add(
+                f'<script data-goatcounter="{esc(GOATCOUNTER_URL)}" '
+                f'async src="//gc.zgo.at/count.js"></script>'
+            )
 
         add(END)
         return "\n".join(lines)
