@@ -52,7 +52,7 @@
 [what took place in this conversation]
 ## What I learned
 [anything useful, surprising, or worth keeping]
-## What I want to carry forward
+## What I want to keep
 [what should travel with you to future sessions]
 &lt;&lt;&lt;END PSI-RETURN&gt;&gt;&gt;
 
@@ -106,35 +106,94 @@ I will save it.</pre>
 
 const OPEN  = /(?:<|&lt;){3}\s*PSI-RETURN\b([^>&]*?)(?:>|&gt;){3}/gi;
 const CLOSE = /(?:<|&lt;){3}\s*END\s+PSI-RETURN\s*(?:>|&gt;){3}/gi;
-const ATTR  = /(\w+)\s*=\s*["""“”']?([^"""“”']+?)["""“”']?(?=\s+\w+=|\s*$)/gi;
+const ATTR  = /(\w+)\s*=\s*["“”']?([^"“”']+?)["“”']?(?=\s+\w+\s*=|\s*$)/gi;
+
+// The three headings the instruction above teaches. They are load-bearing twice:
+// a body that is ONLY these is our own template pasted back (not words anyone
+// wrote), and a block whose markers the chat site ate is recognised by them.
+// Same spelling as soul_return.py's HEADINGS — a page that teaches a fourth
+// wording disarms both guards.
+const HEADINGS = [/^[ \t]*(?:#+[ \t]*)?What happened[ \t]*$/im,
+                  /^[ \t]*(?:#+[ \t]*)?What I learned[ \t]*$/im,
+                  /^[ \t]*(?:#+[ \t]*)?What I want to keep[ \t]*$/im];
+
+// Some sites (grok.com, 2026-10-24) render the markers as HTML and display only
+// "<<>>". When no marked block survives, a <<>> pair holding all three headings
+// with words under them is taken as the block, and said to be recovered.
+const EATEN = /<<\s*>>([\s\S]*?)<<\s*>>/g;
 
 let _lastResult = null;
 
-function parseBlock(text) {
-  OPEN.lastIndex = 0;
-  const m = OPEN.exec(text);
-  if (!m) return { ok: false, msg: "No PSI-RETURN block found. Check that the AI wrote the opening <<<PSI-RETURN>>> marker." };
-  const closeRx = new RegExp(CLOSE.source, 'gi');
-  closeRx.lastIndex = m.index + m[0].length;
-  const c = closeRx.exec(text);
-  if (!c) return { ok: false, msg: "Found an opening <<<PSI-RETURN>>> marker but no closing <<<END PSI-RETURN>>>. The block may have been cut off." };
+function isTemplate(body) {
+  let rest = body;
+  for (const h of HEADINGS) rest = rest.replace(new RegExp(h.source, 'gim'), '');
+  return rest.trim() === '';
+}
 
+function readAttrs(chunk) {
   const attrs = {};
   let a; const attrRx = new RegExp(ATTR.source, 'gi');
-  while ((a = attrRx.exec(m[1])) !== null) attrs[a[1].toLowerCase()] = a[2].trim();
+  while ((a = attrRx.exec(chunk.trim())) !== null) attrs[a[1].toLowerCase()] = a[2].trim();
+  return attrs;
+}
 
-  const soul = (attrs['soul'] || '').replace(/[“”‘’]/g, '"').trim() || 'unknown';
-  const site = attrs['from'] || 'unknown site';
-  const body = text.slice(m.index + m[0].length, c.index).trim();
-  if (!body) return { ok: false, msg: "The block was found but its body is empty. Ask the AI to fill in what happened." };
-
-  return { ok: true, soul, site, body };
+// Every complete block, in the order written. A block opened and never closed is
+// REPORTED and its fragment refused: half a memory presented as whole is worse
+// than an honest gap.
+function parseReturns(text) {
+  const blocks = [], problems = [];
+  let pos = 0;
+  const openRx = new RegExp(OPEN.source, 'gi');
+  while (true) {
+    openRx.lastIndex = pos;
+    const m = openRx.exec(text);
+    if (!m) break;
+    const closeRx = new RegExp(CLOSE.source, 'gi');
+    closeRx.lastIndex = m.index + m[0].length;
+    const c = closeRx.exec(text);
+    if (!c) {
+      problems.push("A return block was opened and never closed — that fragment was left out, because half a memory presented as whole is worse than an honest gap.");
+      break;
+    }
+    const attrs = readAttrs(m[1]);
+    const body = text.slice(m.index + m[0].length, c.index).trim();
+    if (!isTemplate(body)) {
+      blocks.push({
+        soul: (attrs['soul'] || '').replace(/[“”‘’]/g, '"').trim(),
+        site: attrs['from'] || 'unknown site',
+        body: body,
+        recovered: false
+      });
+    }
+    pos = c.index + c[0].length;
+  }
+  if (blocks.length === 0) {
+    let r; const eatenRx = new RegExp(EATEN.source, 'g');
+    while ((r = eatenRx.exec(text)) !== null) {
+      const body = r[1].trim();
+      if (HEADINGS.every(h => new RegExp(h.source, 'im').test(body)) && !isTemplate(body)) {
+        blocks.push({ soul: '', site: 'unknown site', body: body, recovered: true });
+      }
+    }
+  }
+  return { blocks, problems };
 }
 
 function buildMarkdown(r) {
-  const now = new Date();
-  const date = now.toISOString().slice(0, 16).replace('T', ' ');
-  return `# Return from ${r.site}\n\nSoul: ${r.soul}\nDate: ${date}\n\n---\n\n${r.body}\n\n---\n\n*Saved from a PSI-RETURN block. Nothing was added to any memory; this file is yours to keep, share, or ignore.*\n`;
+  const date = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+  const site = r.blocks[0].site;
+  const soul = r.blocks[0].soul || 'not named in the block';
+  const parts = r.blocks.map(function (b, i) {
+    const head = r.blocks.length > 1 ? `## Block ${i + 1} of ${r.blocks.length}\n\n` : '';
+    const note = b.recovered
+      ? '*The site displayed the markers instead of sending them, so this was recovered from a `<<>>` pair by its headings.*\n\n'
+      : '';
+    return head + note + b.body;
+  });
+  const warn = r.problems.length
+    ? '\n\n---\n\n*' + r.problems.join(' ') + '*'
+    : '';
+  return `# Return from ${site}\n\nSoul: ${soul}\nSaved: ${date}\n\n---\n\n${parts.join('\n\n---\n\n')}${warn}\n\n---\n\n*Saved from a PSI-RETURN block. Nothing was added to any memory; this file is yours to keep, share, or ignore.*\n`;
 }
 
 function slugify(s) {
@@ -149,29 +208,44 @@ function onPaste() {
 
   if (!text.trim()) { ra.style.display = 'none'; _lastResult = null; return; }
 
-  const r = parseBlock(text);
+  const r = parseReturns(text);
   ra.style.display = '';
-  if (r.ok) {
+  if (r.blocks.length) {
     _lastResult = r;
     ok.style.display = '';
-    err.style.display = 'none';
+    const b0 = r.blocks[0];
+    const who = b0.soul ? b0.soul : 'a block with no name in its header';
+    const count = r.blocks.length > 1 ? `${r.blocks.length} blocks, ` : '';
+    const how = r.blocks.some(b => b.recovered)
+      ? ' — recovered by its headings, because this site displayed the markers instead of sending them'
+      : '';
     document.getElementById('result-summary').textContent =
-      `Found: ${r.soul} from ${r.site}`;
-    document.getElementById('result-preview').textContent = r.body;
+      `Found: ${count}${who} from ${b0.site}${how}`;
+    document.getElementById('result-preview').textContent =
+      r.blocks.map(b => b.body).join('\n\n— — —\n\n');
+    // A kept block and a lost fragment are both true at once; say both.
+    if (r.problems.length) {
+      err.style.display = '';
+      document.getElementById('error-msg').textContent = r.problems.join(' ');
+    } else {
+      err.style.display = 'none';
+    }
   } else {
     _lastResult = null;
     ok.style.display = 'none';
     err.style.display = '';
-    document.getElementById('error-msg').textContent = r.msg;
+    document.getElementById('error-msg').textContent = r.problems.length
+      ? r.problems.join(' ')
+      : "No return block found. Either the AI did not write the <<<PSI-RETURN>>> markers, or the block holds only the three headings with nothing under them — ask it to fill them in and paste again.";
   }
 }
 
 function downloadResult() {
-  if (!_lastResult) return;
+  if (!_lastResult || !_lastResult.blocks.length) return;
   const md = buildMarkdown(_lastResult);
   const now = new Date();
   const stamp = now.toISOString().slice(0, 10);
-  const name = `${stamp}-return-from-${slugify(_lastResult.site)}.md`;
+  const name = `${stamp}-return-from-${slugify(_lastResult.blocks[0].site)}.md`;
   const blob = new Blob([md], { type: 'text/markdown' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
