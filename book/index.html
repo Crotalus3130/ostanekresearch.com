@@ -40,6 +40,15 @@
 <meta property="og:url" content="https://ostanekresearch.com/book/">
 <meta property="og:site_name" content="Ostanek Research">
 <link rel="alternate" type="application/rss+xml" title="Ostanek Research — field notes" href="https://ostanekresearch.com/feed.xml">
+<script>
+/* Set the stored theme override before first paint. Without this the
+   page paints its default, then flips — the flash of wrong theme.
+   Deliberately inline and tiny; the real toggle is assets/js/theme.js,
+   loaded deferred just below. */
+(function(){try{var t=localStorage.getItem("or-theme");
+if(t)document.documentElement.setAttribute("data-preboot",t);}catch(e){}})();
+</script>
+<script src="../assets/js/theme.js" defer></script>
 <!-- front_door:end -->
 </head>
 <body class="font-garamond theme-light">

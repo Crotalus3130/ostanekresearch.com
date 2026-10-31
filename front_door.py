@@ -129,6 +129,26 @@ READ_NEXT_COUNT = 3
 
 DEFAULT_IMAGE = "assets/mark/ostanek-research-night.jpg"
 
+# The reader's day/night choice (2026-10-31). Measured by script_census.py:
+# only index.html loaded assets/js/theme.js, so the toggle button existed
+# nowhere else and a stored override was read nowhere else — a visitor who
+# picked Night on the root got their system theme on every other page.
+# Both lines are generic (no page-specific path or value), so one constant
+# serves every page; the per-page part is only theme.js's own relative href,
+# resolved in block() like every other asset reference. The inline script is
+# synchronous and tiny on purpose: it must set the hint before first paint,
+# which assets/js/theme.js (loaded deferred, just below it) cannot guarantee.
+THEME_PREBOOT_SCRIPT = (
+    "<script>\n"
+    "/* Set the stored theme override before first paint. Without this the\n"
+    "   page paints its default, then flips — the flash of wrong theme.\n"
+    "   Deliberately inline and tiny; the real toggle is assets/js/theme.js,\n"
+    "   loaded deferred just below. */\n"
+    '(function(){try{var t=localStorage.getItem("or-theme");\n'
+    'if(t)document.documentElement.setAttribute("data-preboot",t);}catch(e){}})();\n'
+    "</script>"
+)
+
 # Orrery product pages — receive SoftwareApplication JSON-LD.
 ORRERY_APP_PAGES = {"orrery/index.html", "orrery/download.html"}
 
@@ -392,6 +412,13 @@ class Page:
             add(
                 f'<script data-goatcounter="{esc(GOATCOUNTER_URL)}" '
                 f'async src="//gc.zgo.at/count.js"></script>'
+            )
+
+        if not self.has("assets/js/theme.js"):
+            add(THEME_PREBOOT_SCRIPT)
+            add(
+                f'<script src="{esc(href_from(self.rel, "assets/js/theme.js"))}" '
+                f'defer></script>'
             )
 
         add(END)

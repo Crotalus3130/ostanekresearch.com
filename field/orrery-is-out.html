@@ -36,6 +36,15 @@
   "datePublished": "2026-10-13"
 }
 </script>
+<script>
+/* Set the stored theme override before first paint. Without this the
+   page paints its default, then flips — the flash of wrong theme.
+   Deliberately inline and tiny; the real toggle is assets/js/theme.js,
+   loaded deferred just below. */
+(function(){try{var t=localStorage.getItem("or-theme");
+if(t)document.documentElement.setAttribute("data-preboot",t);}catch(e){}})();
+</script>
+<script src="../assets/js/theme.js" defer></script>
 <!-- front_door:end -->
 </head>
 <body class="font-source theme-light">

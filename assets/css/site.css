@@ -101,9 +101,13 @@
 
 /* Light paper scheme — same brass lineage, readable day surface.
    Also the explicit day OVERRIDE for the night-default root (theme-night):
-   one selector list so the paper palette has a single source. */
+   one selector list so the paper palette has a single source. The
+   html[data-preboot] variant (2026-10-31) is the same override keyed off
+   <html> instead of <body data-theme>, because the pre-boot script (inline,
+   runs before body exists) has nothing but <html> to mark — see theme.js. */
 body.theme-light,
-body.theme-night[data-theme="light"] {
+body.theme-night[data-theme="light"],
+html[data-preboot="light"] body.theme-night {
   --ground: #f6f1e6;       /* warm paper */
   --panel: #fffdf8;
   --panel-2: #efe8d8;
@@ -152,8 +156,11 @@ body.theme-night[data-theme="light"] {
   }
 }
 
-/* Explicit override, either direction, from the toggle. */
-body.theme-light[data-theme="dark"] {
+/* Explicit override, either direction, from the toggle. The html[data-preboot]
+   variant is the same override before body exists — see the note above
+   theme-light's own selector list. */
+body.theme-light[data-theme="dark"],
+html[data-preboot="dark"] body.theme-light {
   --ground: #14120e;
   --panel: #1c1913;
   --panel-2: #221e16;
@@ -175,8 +182,10 @@ body.theme-light[data-theme="dark"] {
   body.theme-light:not([data-theme="light"]) a { color: var(--gold); }
   body.theme-light:not([data-theme="light"]) a:hover { color: var(--brass); }
 }
-body.theme-light[data-theme="dark"] a { color: var(--gold); }
-body.theme-light[data-theme="dark"] a:hover { color: var(--brass); }
+body.theme-light[data-theme="dark"] a,
+html[data-preboot="dark"] body.theme-light a { color: var(--gold); }
+body.theme-light[data-theme="dark"] a:hover,
+html[data-preboot="dark"] body.theme-light a:hover { color: var(--brass); }
 
 /* ── Night-default + one ink (2026-09-22, Ara's direction) ────────────────
    Ara, steering the open brief, three moves as a set:

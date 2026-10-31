@@ -20,10 +20,10 @@
 if(t)document.documentElement.setAttribute("data-preboot",t);}catch(e){}})();
 </script>
 <style>
-/* Applies the pre-boot value to <body> the instant the body tag is parsed,
-   without waiting for the deferred script. The page is night by default now,
-   so the value that must beat first paint is a stored LIGHT override. */
-html[data-preboot="light"] body.theme-night{--ground:#f6f1e6;--panel:#fffdf8;--panel-2:#efe8d8;--brass:#a67c28;--gold:#3d3426;--cream:#2c261c;--ink:#2c261c;--muted:#6e6554;--line:#ddd2bc;--cite:#7a7160;--btn-ink:#1a1509;--link-underline:rgba(166,124,40,0.4);--selection-bg:rgba(200,155,60,0.22)}
+/* The pre-boot override for a stored LIGHT choice on this night-default page
+   moved to assets/css/site.css 2026-10-31 (html[data-preboot="light"]
+   body.theme-night), so it applies on every page carrying the hint instead
+   of only this one, and a future palette change has one place to happen. */
 
 /* Book announcement — cover beside the text once there is room, stacked
    below that. Scoped to this page rather than site.css because site.css is

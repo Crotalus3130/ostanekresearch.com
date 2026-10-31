@@ -203,6 +203,26 @@ def main() -> int:
         n = texts[p].count("application/ld+json")
         check(f"{p} at most one JSON-LD block", n <= 1, f"found {n}")
 
+    print("\nthe day/night toggle reaches every page, not just the root")
+    # Found 2026-10-31 by script_census.py: only index.html loaded theme.js,
+    # so a reader's stored override silently stopped applying one click deep.
+    import posixpath as _posixpath_test
+    for p in pages:
+        href = _posixpath_test.relpath("assets/js/theme.js", _posixpath_test.dirname(p)) \
+            if _posixpath_test.dirname(p) else "assets/js/theme.js"
+        check(f"{p} loads theme.js at {href}",
+              f'<script src="{href}" defer></script>' in texts[p])
+    # Count the <script src> tag only, not the prose mention inside the
+    # pre-boot comment — "assets/js/theme.js" as a bare substring appears
+    # twice per page by design (comment + the real tag).
+    THEME_SRC_RE = re.compile(r'<script src="[^"]*assets/js/theme\.js" defer></script>')
+    check("exactly one theme.js <script> tag per page (no duplicates from a re-run)",
+          not {p: n for p in pages if (n := len(THEME_SRC_RE.findall(texts[p]))) != 1})
+    check("the pre-boot hint script runs on every page",
+          all("data-preboot" in texts[p] for p in pages))
+    check("index.html's hand-written pre-boot script was not duplicated",
+          texts["index.html"].count("localStorage.getItem(\"or-theme\")") == 1)
+
     print("\nread next — every field note has an onward move")
     RN_RE = re.compile(
         r"<!--\s*front_door:readnext:begin.*?<!--\s*front_door:readnext:end\s*-->",
