@@ -60,9 +60,17 @@ def main() -> int:
         check(tag, not off, str(off))
 
     print("\nhand-written values survived")
+    # The needle, not the intent, is what rotted here: `e197a3d` ("home:
+    # research first, Orrery as the instrument; price only on Orrery pages")
+    # deliberately took "$79, bought once" off the root, and this check went on
+    # reporting a confident failure about a sentence nobody wants back. The
+    # assertion that matters is unchanged — the root's hand-written
+    # og:description survives the generator instead of being overwritten from
+    # <title> — so it is repointed at the sentence that is there now.
     check(
         "index.html kept its own og:description",
-        "A Mac app that keeps an AI's identity on your computer. $79, bought once."
+        'og:description" content="Economics of choice, language as measurement, '
+        'and the ethology of planned organisms. Papers, instruments, field notes."'
         in texts["index.html"],
     )
     check(
@@ -106,6 +114,86 @@ def main() -> int:
         check(f"{p} → {canon(p)}",
               f'og:url" content="{canon(p)}"' in texts[p]
               and f'rel="canonical" href="{canon(p)}"' in texts[p])
+
+    print("\nstructured data — every page is either covered or exempt on purpose")
+    import json as _json
+    sys.path.insert(0, str(SITE))
+    import front_door as fd
+
+    LD_RE = re.compile(
+        r'<script type="application/ld\+json">\s*(.*?)\s*</script>', re.S)
+    blobs: dict[str, list[dict]] = {}
+    for p in pages:
+        found = LD_RE.findall(texts[p])
+        parsed = []
+        for raw in found:
+            try:
+                parsed.append(_json.loads(raw))
+            except Exception as e:                      # a page shipping broken JSON
+                check(f"{p} JSON-LD parses", False, str(e))
+        blobs[p] = parsed
+        check(f"{p} has at most one JSON-LD block", len(found) <= 1, f"{len(found)}")
+
+    for p in pages:
+        covered = bool(blobs[p])
+        exempt = p in fd.STRUCTURED_DATA_EXEMPT
+        # The point of this assertion: "no structured data here" and "nobody
+        # got round to this page" look identical from outside. Exempt is a
+        # decision with a reason beside it; anything else must be covered.
+        check(f"{p} covered or exempt", covered != exempt,
+              "exempt AND covered" if covered and exempt else "neither")
+        if covered:
+            obj = blobs[p][0]
+            check(f"{p} declares @context and @type",
+                  obj.get("@context") == "https://schema.org" and obj.get("@type"))
+
+    print("\nthe field index declares the whole corpus, not just itself")
+    blog = blobs["field/index.html"][0] if blobs["field/index.html"] else {}
+    notes = [p for p in pages
+             if p.startswith("field/") and p != "field/index.html"]
+    posts = blog.get("blogPost", [])
+    check("field/index.html is a Blog", blog.get("@type") == "Blog")
+    check("one blogPost per published note",
+          len(posts) == len(notes), f"{len(posts)} posts vs {len(notes)} notes")
+    note_urls = {canon(p) for p in notes}
+    check("every blogPost url is a published note",
+          all(e.get("url") in note_urls for e in posts),
+          str([e.get("url") for e in posts if e.get("url") not in note_urls]))
+    check("every blogPost names an author and a date",
+          all(e.get("author", {}).get("name") and e.get("datePublished")
+              for e in posts))
+
+    print("\nthe book page's author comes out of its own title")
+    bk = blobs["book/index.html"][0] if blobs["book/index.html"] else {}
+    check("book is a Book", bk.get("@type") == "Book")
+    check("book names an author",
+          bk.get("author", {}).get("name") == "Kevin G. Ostanek",
+          str(bk.get("author")))
+    check("book links the store it links on the page",
+          "amazon." in (bk.get("sameAs") or ""), str(bk.get("sameAs")))
+
+    print("\ntitle parsing — the hazard reproduces before the guard is trusted")
+    class _T:
+        def __init__(self, t): self.title = t
+        short_title = fd.Page.short_title
+        title_byline = fd.Page.title_byline
+    # Two segments: the second IS the author. This is the book page's shape.
+    check("`Work — Person` yields the person",
+          _T("A Natural History of Man — Kevin G. Ostanek").title_byline()
+          == "Kevin G. Ostanek")
+    # Three segments: the last is the site name, not a person. A naive
+    # "take the last segment" reading would put "Ostanek Research" in an
+    # author field, which is the defect this guard exists to refuse.
+    check("`Thing — gloss — Ostanek Research` yields no author",
+          _T("Soul Return — bring a session home from any AI — Ostanek Research")
+          .title_byline() == "")
+    check("`Thing — Ostanek Research` yields no author",
+          _T("Field notes — Ostanek Research").title_byline() == "")
+    check("short_title drops everything after the first em dash",
+          _T("Soul Return — bring a session home — Ostanek Research").short_title()
+          == "Soul Return")
+    check("short_title survives a title with no separator",
+          _T("Provenance").short_title() == "Provenance")
 
     print("\nsitemap")
     sm = ET.parse(SITE / "sitemap.xml").getroot()
@@ -156,12 +244,16 @@ def main() -> int:
                    if p.startswith("field/") and p != "field/index.html"]
     for p in field_notes + list(ORRERY_APP) + ["index.html"]:
         check(f"{p} has JSON-LD", "application/ld+json" in texts[p])
-    # Pages that should NOT get JSON-LD
-    for p in ["book/index.html", "field/index.html", "orrery/thanks.html",
-              "orrery/license.html", "orrery/privacy.html", "orrery/refunds.html",
-              "orrery/psi-format.html", "orrery/soul-return.html"]:
+    # The pages that get NO structured data are read from front_door.py's own
+    # STRUCTURED_DATA_EXEMPT, not re-listed here. Until 2026-11-03 this was a
+    # hardcoded copy of that decision, and the copy is what rotted: it asserted
+    # the absence of JSON-LD on five pages that should have had it, and left
+    # provenance.html out of both lists so nothing in the suite had an opinion
+    # about it either way. One list, read from the source of truth (LESSONS #1).
+    for p in sorted(fd.STRUCTURED_DATA_EXEMPT):
         if p in texts:
-            check(f"{p} has no JSON-LD", "application/ld+json" not in texts[p])
+            check(f"{p} has no JSON-LD (exempt: {fd.STRUCTURED_DATA_EXEMPT[p]})",
+                  "application/ld+json" not in texts[p])
     # JSON-LD blocks parse as valid JSON with the right @type
     import re as _re_test
     JSONLD_RE = re.compile(

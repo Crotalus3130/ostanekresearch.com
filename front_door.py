@@ -152,6 +152,19 @@ THEME_PREBOOT_SCRIPT = (
 # Orrery product pages — receive SoftwareApplication JSON-LD.
 ORRERY_APP_PAGES = {"orrery/index.html", "orrery/download.html"}
 
+# Pages deliberately left without structured data, and the reason — because
+# "no JSON-LD here" and "nobody got round to this page" are indistinguishable
+# from the outside, and the second one is what a sweep should be able to find.
+# These four are terms-and-conditions text and a post-purchase receipt: there
+# is no schema.org type whose presence would earn them a richer result, and
+# thanks.html is in NOINDEX anyway.
+STRUCTURED_DATA_EXEMPT = {
+    "orrery/license.html": "licence text — no schema type earns a result here",
+    "orrery/privacy.html": "policy text — same",
+    "orrery/refunds.html": "policy text — same",
+    "orrery/thanks.html": "post-purchase receipt, and in NOINDEX",
+}
+
 # Canonical once-off price. price_audit.py is the gate that keeps this honest;
 # update both together if the price changes.
 ORRERY_ONCE_PRICE = "79.00"
@@ -195,6 +208,12 @@ def last_modified(relpath: str) -> str:
     """Commit date of the page's last change, as a sitemap lastmod date."""
     out = git("log", "-1", "--format=%cI", "--", relpath).strip()
     return out[:10] if out else dt.date.today().isoformat()
+
+
+def _publisher() -> dict:
+    """The one publisher object every schema on this site shares. One
+    function, so a second spelling cannot drift in beside the first."""
+    return {"@type": "Organization", "name": "Ostanek Research", "url": ORIGIN}
 
 
 # ------------------------------------------------------------------- the page
@@ -287,6 +306,10 @@ class Page:
         self.field_meta: dict | None = None
         # Populated by main(): the index-card dicts for this note's read-next cards.
         self.read_next: list[dict] = []
+        # Populated by main() for field/index.html only: every index card, so the
+        # Blog schema can list the corpus from the same hand-written source the
+        # feed reads. Empty elsewhere, and empty means the branch emits nothing.
+        self.index_items: list[dict] = []
 
     def _pick_image(self, assets: set[str]) -> str:
         """The page's own first published image, else the house mark. A shared
@@ -310,6 +333,32 @@ class Page:
         return strip_tags(m.group(1)) if m else None
 
     # --------------------------------------------------------- structured data
+
+    def short_title(self) -> str:
+        """The page's own name, without the trailing site/author segments.
+
+        Titles here are written as `Thing — gloss — Ostanek Research`, so the
+        first em-dash segment is the name a person would call the page. Falls
+        back to the whole title when there is no separator."""
+        return (self.title.split(" — ")[0] or self.title).strip()
+
+    def title_byline(self) -> str:
+        """The author named in the title, when the title is exactly
+        `Work — Person`. Two segments only: three means the last one is the
+        site name, and anything else is a shape this cannot read, so it
+        returns "" and the caller omits the field rather than guessing."""
+        parts = [p.strip() for p in self.title.split(" — ") if p.strip()]
+        if len(parts) != 2 or parts[1] == "Ostanek Research":
+            return ""
+        return parts[1]
+
+    def retailer_link(self) -> str:
+        """A retailer URL the page itself links to. Read off the page so the
+        schema cannot name a store the reader cannot click."""
+        for href in re.findall(r'href=["\']([^"\']+)["\']', self.clean):
+            if re.match(r"^https?://(?:www\.)?amazon\.[a-z.]+/", href, re.I):
+                return href
+        return ""
 
     def jsonld(self) -> str:
         """JSON-LD structured data, derived from what this page already declares.
@@ -352,11 +401,7 @@ class Page:
                 "headline": self.title,
                 "description": self.description,
                 "url": url,
-                "publisher": {
-                    "@type": "Organization",
-                    "name": "Ostanek Research",
-                    "url": ORIGIN,
-                },
+                "publisher": _publisher(),
             }
             if self.field_meta:
                 data["author"] = {
@@ -364,6 +409,82 @@ class Page:
                     "name": self.field_meta["author"],
                 }
                 data["datePublished"] = self.field_meta["date"]
+        elif self.rel == "field/index.html" and self.index_items:
+            # The corpus as one object. Twenty-two notes each carried an
+            # Article from 10-23 onward and the page that collects them
+            # declared nothing, so anything reading the site one page at a
+            # time could not tell these were one body of work by five named
+            # authors. Every value comes from the hand-written index cards.
+            data = {
+                "@context": "https://schema.org",
+                "@type": "Blog",
+                "name": self.short_title(),
+                "description": self.description,
+                "url": url,
+                "publisher": _publisher(),
+                "blogPost": [
+                    {
+                        "@type": "BlogPosting",
+                        "headline": it["title"],
+                        "url": url_for(it["rel"]),
+                        "datePublished": it["date"],
+                        "author": {"@type": "Person", "name": it["author"]},
+                    }
+                    for it in self.index_items
+                ],
+            }
+        elif self.rel == "book/index.html":
+            data = {
+                "@context": "https://schema.org",
+                "@type": "Book",
+                "name": self.short_title(),
+                "description": self.description,
+                "url": url,
+                "publisher": _publisher(),
+            }
+            byline = self.title_byline()
+            if byline:
+                data["author"] = {"@type": "Person", "name": byline}
+            retailer = self.retailer_link()
+            if retailer:
+                # `sameAs`, not `offers`: the store holds the price, and a
+                # price repeated here is one more place for it to go stale.
+                data["sameAs"] = retailer
+            if self.has("kindle"):
+                data["bookFormat"] = "https://schema.org/EBook"
+        elif self.rel == "orrery/soul-return.html":
+            # Free tool, and the only page on the site that is useful to a
+            # stranger before they buy anything. Deliberately no `offers`:
+            # the page states no price, and a schema should not be the first
+            # place a claim about money appears.
+            data = {
+                "@context": "https://schema.org",
+                "@type": "WebApplication",
+                "name": self.short_title(),
+                "description": self.description,
+                "url": url,
+                "applicationCategory": "UtilitiesApplication",
+                "browserRequirements": "Requires JavaScript.",
+                "publisher": _publisher(),
+            }
+        elif self.rel == "orrery/psi-format.html":
+            data = {
+                "@context": "https://schema.org",
+                "@type": "TechArticle",
+                "headline": self.short_title(),
+                "description": self.description,
+                "url": url,
+                "publisher": _publisher(),
+            }
+        elif self.rel == "provenance.html":
+            data = {
+                "@context": "https://schema.org",
+                "@type": "AboutPage",
+                "name": self.short_title(),
+                "description": self.description,
+                "url": url,
+                "about": _publisher(),
+            }
 
         if data is None:
             return ""
@@ -722,6 +843,9 @@ def main() -> int:
     for item in items:
         if item["rel"] in pages:
             pages[item["rel"]].field_meta = item
+    # The same cards, handed to the index page itself, for the Blog schema.
+    if "field/index.html" in pages:
+        pages["field/index.html"].index_items = items
 
     # Read-next cards, likewise before the change-diff. The plan is computed
     # over the index cards only, so a page that is not listed as a field note
