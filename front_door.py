@@ -181,7 +181,7 @@ ROOTS = ["index.html"]
 # (2) set this to your count URL, (3) run `python3 front_door.py --write`,
 # (4) commit and push. Leave empty to disable. No account = no data collected.
 # Example: GOATCOUNTER_URL = "https://ostanekresearch.goatcounter.com/count"
-GOATCOUNTER_URL = ""
+GOATCOUNTER_URL = "https://ostanekresearch.goatcounter.com/count"
 
 
 # ---------------------------------------------------------------- git helpers
