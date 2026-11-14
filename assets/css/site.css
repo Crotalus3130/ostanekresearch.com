@@ -514,6 +514,22 @@ h1, h2, h3 { font-weight: 400; text-wrap: balance; margin: 0; font-family: var(-
 /* Pushes anything after it to the right edge — used for the theme toggle. */
 .nav .nav-end { margin-left: auto; }
 
+/* Buy Orrery pill. Moved here from index.html's page-scoped block on
+   2026-11-13 so every page carrying the shared .nav renders the same
+   component — the front page had the only copy, so the class existed
+   nowhere else and would have rendered as plain text. Same brass-on-ink
+   pair as .btn (the sanctioned contrast combination); .nav is sticky, so
+   it stays on screen past the fold on every page that has it. */
+.nav a.nav-buy,
+body.theme-night .nav a.nav-buy {
+  background: var(--brass); color: var(--btn-ink);
+  border-radius: 999px; padding: 4px 13px; border-bottom: none;
+}
+.nav a.nav-buy:hover,
+body.theme-night .nav a.nav-buy:hover {
+  color: var(--btn-ink); filter: brightness(1.06); border-bottom: none;
+}
+
 /* Research paper masthead: left-aligned, abstract block */
 .masthead {
   padding: 56px 0 40px;
