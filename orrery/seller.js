@@ -18,16 +18,16 @@ window.ORRERY_SELLER = {
   // Stripe Managed Payments (merchant of record), live 2026-10-10. Payment
   // Links redirect to thanks.html with ?session_id= (and kind=monthly).
   stripe: {
-    once: "https://buy.stripe.com/bJe6oJ2T5dzA1yi2bW9EI00",      // $79, one time
+    once: "https://buy.stripe.com/6oU3cxbpB8fgccW03O9EI02",      // $39.99, one time (founding price, 2026-11-15)
     monthly: "https://buy.stripe.com/5kQ8wRdxJ678ccW5o89EI01",   // $5 / month
   },
   paddle: {
     token: "",              // client-side token, starts live_  (Developer tools → Authentication)
-    once: "pri_01m2hh6n6tsbgyzdrgy8nevnad",      // $79, one time
+    once: "pri_01m2hh6n6tsbgyzdrgy8nevnad",      // $39.99, one time
     monthly: "pri_01m2vrzkee7286g0mkkvv83d56",   // $5 / month
   },
   lemonsqueezy: {
-    once: "",               // checkout link for the $79 product (Share → Checkout link)
+    once: "",               // checkout link for the one-time product (Share → Checkout link)
     monthly: "",            // checkout link for the $5/month product
   },
 
