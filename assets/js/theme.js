@@ -33,7 +33,10 @@
   // toggle overrides that. Other pages keep following the system.
   var nightDefault = root.classList.contains("theme-night");
   function baseTheme() {
-    return nightDefault ? "dark" : (systemIsDark() ? "dark" : "light");
+    // 2026-11-19, Kevin: "clean, white appearance". Every page is white by
+    // default, night pages included; Night is the reader's choice, never
+    // the system's. (nightDefault kept so the one-ink rules still scope.)
+    return "light";
   }
   function active() {
     return stored() || baseTheme();

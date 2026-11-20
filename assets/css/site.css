@@ -58,17 +58,19 @@
 /* Default = Orrery landing warm-dark (aligned 2026-08-13).
    Light paper scheme: body.theme-light */
 :root {
-  --ground: #14120e;       /* Orrery warm near-black */
-  --panel: #1c1913;
-  --panel-2: #221e16;
-  --brass: #c89b3c;        /* Orrery accent */
-  --gold: #e8d5a3;         /* Orrery heading */
-  --cream: #e3dac4;        /* Orrery body */
-  --muted: #94896f;
-  --line: #3a3324;
-  --cite: #8a7f68;
-  --ink: #e3dac4;          /* primary text (alias cream on dark) */
-  --btn-ink: #1a1509;
+  --ground: #ffffff;       /* white (Kevin, 2026-11-19: "clean, white") */
+  --panel: #ffffff;
+  --panel-2: #f6f6f5;
+  --brass: #8c6a22;        /* the one accent, deepened to read on white */
+  --gold: #161616;         /* headings = ink */
+  --cream: #222222;        /* body ink */
+  --ink: #161616;
+  --muted: #666666;
+  --line: #e4e4e2;
+  --cite: #737373;
+  --btn-ink: #ffffff;
+  --link-underline: rgba(22, 22, 22, 0.28);
+  --selection-bg: rgba(140, 106, 34, 0.18);
   --body-font: "EB Garamond", Georgia, "Iowan Old Style", "Times New Roman", serif;
   --ui-font: "EB Garamond", Georgia, serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -93,10 +95,10 @@
      additions stay in the same system instead of each inventing their own. */
   --space-section: clamp(2.5rem, 1.6rem + 3.4vw, 5.0rem);
   --radius: 10px;
-  --shadow: 0 1px 2px rgba(20, 18, 14, 0.05), 0 8px 28px rgba(20, 18, 14, 0.07);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.05);
   --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
   --hairline: color-mix(in oklab, var(--line) 70%, transparent);
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 /* Light paper scheme — same brass lineage, readable day surface.
@@ -108,20 +110,20 @@
 body.theme-light,
 body.theme-night[data-theme="light"],
 html[data-preboot="light"] body.theme-night {
-  --ground: #f6f1e6;       /* warm paper */
-  --panel: #fffdf8;
-  --panel-2: #efe8d8;
-  --brass: #a67c28;        /* brass on paper (slightly deeper) */
-  --gold: #3d3426;         /* headings = ink, not pale gold */
-  --cream: #2c261c;        /* body ink */
-  --ink: #2c261c;
-  --muted: #6e6554;
-  --line: #ddd2bc;
-  --cite: #7a7160;
-  --btn-ink: #1a1509;
-  --link-underline: rgba(166, 124, 40, 0.4);
-  --selection-bg: rgba(200, 155, 60, 0.22);
-  --shadow: 0 1px 2px rgba(60, 48, 24, 0.05), 0 10px 30px rgba(60, 48, 24, 0.08);
+  --ground: #ffffff;       /* white (Kevin, 2026-11-19: "clean, white") */
+  --panel: #ffffff;
+  --panel-2: #f6f6f5;
+  --brass: #8c6a22;        /* the one accent, deepened to read on white */
+  --gold: #161616;         /* headings = ink */
+  --cream: #222222;        /* body ink */
+  --ink: #161616;
+  --muted: #666666;
+  --line: #e4e4e2;
+  --cite: #737373;
+  --btn-ink: #ffffff;
+  --link-underline: rgba(22, 22, 22, 0.28);
+  --selection-bg: rgba(140, 106, 34, 0.18);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.05);
 }
 
 /* ── Night (2026-09-22) ────────────────────────────────────────────────────
@@ -137,30 +139,16 @@ html[data-preboot="light"] body.theme-night {
 
    Follows the reader's machine by default. body[data-theme] overrides it in
    either direction, and the site is correct with JavaScript disabled. */
-@media (prefers-color-scheme: dark) {
-  body.theme-light:not([data-theme="light"]) {
-    --ground: #14120e;
-    --panel: #1c1913;
-    --panel-2: #221e16;
-    --brass: #c89b3c;
-    --gold: #e8d5a3;
-    --cream: #e3dac4;
-    --ink: #e3dac4;
-    --muted: #9a8f75;
-    --line: #3a3324;
-    --cite: #8a7f68;
-    --btn-ink: #1a1509;
-    --link-underline: rgba(200, 155, 60, 0.45);
-    --selection-bg: rgba(200, 155, 60, 0.28);
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 34px rgba(0, 0, 0, 0.45);
-  }
-}
+/* (auto dark-by-system removed 2026-11-19: white is the default everywhere;
+   the toggle still offers Night.) */
 
 /* Explicit override, either direction, from the toggle. The html[data-preboot]
    variant is the same override before body exists — see the note above
    theme-light's own selector list. */
 body.theme-light[data-theme="dark"],
-html[data-preboot="dark"] body.theme-light {
+html[data-preboot="dark"] body.theme-light,
+body.theme-night[data-theme="dark"],
+html[data-preboot="dark"] body.theme-night {
   --ground: #14120e;
   --panel: #1c1913;
   --panel-2: #221e16;
@@ -178,10 +166,8 @@ html[data-preboot="dark"] body.theme-light {
 }
 
 /* On dark, headings are pale gold and the theme-light ink override must go. */
-@media (prefers-color-scheme: dark) {
-  body.theme-light:not([data-theme="light"]) a { color: var(--gold); }
-  body.theme-light:not([data-theme="light"]) a:hover { color: var(--brass); }
-}
+/* (auto dark-by-system removed 2026-11-19: white is the default everywhere;
+   the toggle still offers Night.) */
 body.theme-light[data-theme="dark"] a,
 html[data-preboot="dark"] body.theme-light a { color: var(--gold); }
 body.theme-light[data-theme="dark"] a:hover,
@@ -201,8 +187,8 @@ html[data-preboot="dark"] body.theme-light a:hover { color: var(--brass); }
         on the page, not here.
    Every rule is scoped under body.theme-night, so the other pages keep
    their current dress by selector construction, not by hope. */
-body.theme-night { color-scheme: dark; }
-body.theme-night[data-theme="light"] { color-scheme: light; }
+body.theme-night { color-scheme: light; }
+body.theme-night[data-theme="dark"] { color-scheme: dark; }
 
 /* One ink: links are the reading ink, underlined; brass only on approach. */
 body.theme-night { --link-underline: color-mix(in oklab, var(--ink) 32%, transparent); }
@@ -233,8 +219,9 @@ body.theme-night .pub-list .pub-venue {
    and vanishes on the night ground ("do not sit the gold/sage wave on a black
    theater"). So on dark it keeps its paper: a plate under the mark, which in
    the day override is the exact ground color and disappears. */
-body.theme-night header.masthead.masthead-lockup img {
-  background: #f6f1e6;
+body.theme-night[data-theme="dark"] header.masthead.masthead-lockup img,
+html[data-preboot="dark"] body.theme-night header.masthead.masthead-lockup img {
+  background: #ffffff;
   border-radius: var(--radius);
   padding: clamp(16px, 2.5vw, 28px);
 }
@@ -959,3 +946,33 @@ article.note figure.wide {
 }
 article.note figure.wide img { width: 100%; height: auto; display: block; border-radius: 4px; }
 article.note figure.wide figcaption { max-width: min(72ch, 100%); margin: 0.8em auto 0; }
+
+/* ── White (2026-11-19) ────────────────────────────────────────────────────
+   Kevin: "clean, white appearance" (Room 11-19, after sakana.ai). On white the
+   filled actions are ink, not brass: black on white is the one pairing that
+   reads as quiet authority; brass stays for hover, focus and the eyebrow.
+   The Night toggle keeps the brass buttons (rules below exclude dark). */
+html:not([data-preboot="dark"]) body:not([data-theme="dark"]) a.btn:not(.btn-quiet),
+html:not([data-preboot="dark"]) body:not([data-theme="dark"]) button.primary,
+html:not([data-preboot="dark"]) body:not([data-theme="dark"]) .nav a.nav-buy {
+  background: var(--ink);
+  color: #ffffff;
+}
+html:not([data-preboot="dark"]) body:not([data-theme="dark"]) a.btn:not(.btn-quiet):hover,
+html:not([data-preboot="dark"]) body:not([data-theme="dark"]) button.primary:hover,
+html:not([data-preboot="dark"]) body:not([data-theme="dark"]) .nav a.nav-buy:hover {
+  background: #000000;
+  color: #ffffff;
+  filter: none;
+}
+/* One ink on every white page, not just the homepage: links read in the text
+   colour, underlined; brass answers the pointer. */
+html:not([data-preboot="dark"]) body.theme-light:not([data-theme="dark"]) a:not(.btn):not(.nav-buy) {
+  color: var(--ink);
+  text-decoration-color: var(--link-underline);
+}
+html:not([data-preboot="dark"]) body.theme-light:not([data-theme="dark"]) a:not(.btn):not(.nav-buy):hover {
+  text-decoration-color: var(--brass);
+}
+html:not([data-preboot="dark"]) body.theme-light:not([data-theme="dark"]) .nav a:not(.nav-buy) { color: var(--muted); }
+html:not([data-preboot="dark"]) body.theme-light:not([data-theme="dark"]) .nav a:not(.nav-buy):hover { color: var(--ink); }
