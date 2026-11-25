@@ -165,9 +165,32 @@ STRUCTURED_DATA_EXEMPT = {
     "orrery/thanks.html": "post-purchase receipt, and in NOINDEX",
 }
 
-# Canonical once-off price. price_audit.py is the gate that keeps this honest;
-# update both together if the price changes.
-ORRERY_ONCE_PRICE = "79.00"
+# The once-price is READ OFF THE PAGE, never declared here — see
+# Page.once_price(). It used to be the constant `ORRERY_ONCE_PRICE = "79.00"`,
+# whose comment named `price_audit.py` as "the gate that keeps this honest";
+# no file of that name exists anywhere on this disk. Measured 2026-11-25: every
+# human-visible line on both Orrery pages has said **$39.99** since `61f34d8`
+# (11-18, "the $39.99 buy link is live in Stripe"), including the Stripe button
+# itself, while the machine-readable Offer in each page's JSON-LD still said
+# 79.00 — the number a search result, a shopping surface or an AI assistant
+# quotes. The same file already states the rule, 280 lines down, about the
+# book's retailer: *"`sameAs`, not `offers`: the store holds the price, and a
+# price repeated here is one more place for it to go stale."* One question
+# answered twice in one file, once carefully and once not (LESSONS #1).
+#
+# Where it is read from: the text of the anchor that actually opens checkout,
+# `<a … data-buy="once">Buy once — $39.99</a>`. Not from the surrounding prose.
+# Prose proximity was the first version and it is not safe: on orrery/index.html
+# the sentence "…$39.99 once, with an optional $5 a month" puts a second amount
+# nineteen characters from the word "once", so a window wide enough to admit
+# "$39.99, bought once" also admits the subscription and the page reads as two
+# competing prices. The button is exact, hand-written, and the strongest source
+# there is — the schema's price is then *the number on the control that charges
+# the reader*, and `data-buy="monthly"` beside it is a different attribute, not
+# a near miss. No button text with a price ⇒ no Offer, and the report says so.
+BUY_ONCE_RX = re.compile(
+    r'<a\b[^>]*\bdata-buy=["\']once["\'][^>]*>(.*?)</a>', re.I | re.S)
+MONEY_RX = re.compile(r"\$\s?(\d{1,4}(?:\.\d{2})?)")
 
 # Pages that are published but must never be handed to a search engine.
 # thanks.html is what a buyer sees after paying; it is not a front door.
@@ -304,6 +327,10 @@ class Page:
         self.noindex = relpath in NOINDEX
         # Populated by main() for field notes, using data from the field index cards.
         self.field_meta: dict | None = None
+        # Populated by main(): the one price the site's own buy-once button
+        # states. Empty means no Offer is emitted on this page — see
+        # site_once_price() for why it is never a constant in this file.
+        self.once_price: str = ""
         # Populated by main(): the index-card dicts for this note's read-next cards.
         self.read_next: list[dict] = []
         # Populated by main() for field/index.html only: every index card, so the
@@ -360,6 +387,14 @@ class Page:
                 return href
         return ""
 
+    def buy_once_prices(self) -> set[str]:
+        """Every price written on this page's own `data-buy="once"` buttons."""
+        out: set[str] = set()
+        for label in BUY_ONCE_RX.findall(self.clean):
+            for m in MONEY_RX.finditer(strip_tags(label)):
+                out.add(f"{float(m.group(1)):.2f}")
+        return out
+
     def jsonld(self) -> str:
         """JSON-LD structured data, derived from what this page already declares.
 
@@ -388,12 +423,13 @@ class Page:
                 "url": url,
                 "operatingSystem": "macOS",
                 "applicationCategory": "UtilitiesApplication",
-                "offers": {
-                    "@type": "Offer",
-                    "price": ORRERY_ONCE_PRICE,
-                    "priceCurrency": "USD",
-                },
             }
+            if self.once_price:
+                data["offers"] = {
+                    "@type": "Offer",
+                    "price": self.once_price,
+                    "priceCurrency": "USD",
+                }
         elif self.rel.startswith("field/") and self.rel != "field/index.html":
             data = {
                 "@context": "https://schema.org",
@@ -705,6 +741,32 @@ def read_next_plan(items: list[dict], count: int = READ_NEXT_COUNT) -> dict[str,
     return plan
 
 
+# ------------------------------------------------------------------ the price
+
+def site_once_price(pages: dict[str, Page]) -> tuple[str, str]:
+    """(price, why) — the one once-price the site's own checkout buttons state.
+
+    Read across every published page rather than per page, because the page
+    that carries the Offer (orrery/index.html) is not the page that carries the
+    button (orrery/download.html), and a price repeated on both would be the
+    second declaration this function exists to abolish. Disagreement between
+    two buttons is refused, not resolved: two live buttons at different prices
+    is a fact about the site that a human has to settle, and emitting either
+    one would hide it.
+    """
+    found: dict[str, list[str]] = {}
+    for rel in sorted(pages):
+        for value in sorted(pages[rel].buy_once_prices()):
+            found.setdefault(value, []).append(rel)
+    if not found:
+        return "", 'no data-buy="once" button on the site states a price'
+    if len(found) > 1:
+        return "", ("buy-once buttons disagree — " + "; ".join(
+            f"${v} on {', '.join(rels)}" for v, rels in sorted(found.items())))
+    value, rels = next(iter(found.items()))
+    return value, "from the buy-once button on " + ", ".join(rels)
+
+
 # ------------------------------------------------------------- reachable set
 
 def reachable(pages: dict[str, Page]) -> set[str]:
@@ -837,6 +899,12 @@ def main() -> int:
     rels = published_pages()
     pages = {r: Page(r, assets) for r in rels}
 
+    # The price, before the change-diff: the Offer on the two product pages is
+    # whatever the site's own checkout button says, or absent.
+    once_price, once_why = site_once_price(pages)
+    for p in pages.values():
+        p.once_price = once_price
+
     # Enrich field notes with author/date from the index cards, so JSON-LD
     # Article schema can include them. This must come before the change-diff.
     items = feed_items(pages)
@@ -920,6 +988,16 @@ def main() -> int:
         print(f"\nNO <meta name=description> — nothing to mirror ({len(missing_desc)}):")
         for r in missing_desc:
             print(f"  · {r}")
+
+    # The money, printed every run. A silent Offer is how 79.00 outlived the
+    # real price by a week: nothing in this tool's output said what number it
+    # was about to hand a search engine, so the stale one was invisible.
+    if once_price:
+        print(f"\nonce-price: ${once_price} — {once_why}")
+        print("  → Offer on " + ", ".join(sorted(
+            r for r in ORRERY_APP_PAGES if r in pages)))
+    else:
+        print(f"\nonce-price: NO OFFER EMITTED — {once_why}")
 
     # The pill is the seat's short lowercase tag (ara, claude, kevin, novak,
     # gemini). Measured 2026-10-24: 7 of 22 cards carry the full name instead,

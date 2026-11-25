@@ -279,10 +279,64 @@ def main() -> int:
                 d = _json_test.loads(m.group(1))
                 check(f"{p} JSON-LD @type=SoftwareApplication",
                       d.get("@type") == "SoftwareApplication")
-                check(f"{p} JSON-LD price present",
-                      d.get("offers", {}).get("price") == "79.00")
+                # This check USED to read `price == "79.00"`, a literal, under
+                # the label "price present" — so when Kevin's $39.99 went live
+                # on 11-18 (61f34d8) the suite stayed green while both product
+                # pages went on handing search engines, shopping surfaces and
+                # AI assistants a price nobody is charged. A test pinned to a
+                # number is a test that certifies the stale one.
+                #
+                # Two assertions replace it, and neither names an amount.
+                # First, independent of front_door entirely: whatever price the
+                # schema states must appear in the page's own visible copy, so
+                # a reader and a crawler cannot be shown different numbers.
+                price = d.get("offers", {}).get("price", "")
+                check(f"{p} JSON-LD states a price", bool(price))
+                visible = re.sub(r"<[^>]+>", " ", texts[p])
+                check(f"{p} schema price ${price} is on the page a reader sees",
+                      f"${price}" in visible)
+                # Second, against the control that actually takes the money.
+                # fd's own regexes, not a copy: one implementation (LESSONS #1).
+                buttons: set[str] = set()
+                for page_text in texts.values():
+                    for label in fd.BUY_ONCE_RX.findall(page_text):
+                        for m in fd.MONEY_RX.finditer(
+                                re.sub(r"<[^>]+>", " ", label)):
+                            buttons.add(f"{float(m.group(1)):.2f}")
+                check("the site's buy-once buttons state exactly one price",
+                      len(buttons) == 1, str(sorted(buttons)))
+                check(f"{p} schema price == the buy-once button price",
+                      buttons == {price}, f"schema {price}, buttons {sorted(buttons)}")
             except Exception as exc:
                 check(f"{p} JSON-LD parses", False, str(exc))
+
+    # The refusal path, planted rather than assumed. Two live buttons at
+    # different prices is the one case where emitting either number would hide
+    # a fact a human has to settle, and on a site that currently has exactly
+    # one price nothing would otherwise exercise it.
+    class _StubPage:
+        def __init__(self, prices): self._p = set(prices)
+        def buy_once_prices(self): return self._p
+
+    agree = {"a.html": _StubPage({"39.99"}), "b.html": _StubPage({"39.99"})}
+    disagree = {"a.html": _StubPage({"39.99"}), "b.html": _StubPage({"79.00"})}
+    silent = {"a.html": _StubPage(set())}
+    check("two buttons that agree yield that price",
+          fd.site_once_price(agree)[0] == "39.99")
+    check("two buttons that disagree yield NO price",
+          fd.site_once_price(disagree)[0] == "" and
+          "disagree" in fd.site_once_price(disagree)[1])
+    check("no priced button yields NO price, with a reason",
+          fd.site_once_price(silent)[0] == "" and
+          bool(fd.site_once_price(silent)[1]))
+    # And the parse itself, on the two button shapes the site actually serves:
+    # the once button must be read and the monthly one must not.
+    once_label = fd.BUY_ONCE_RX.findall(
+        '<a class="btn" href="x" data-buy="once">Buy once — $39.99</a>'
+        '<a class="btn" href="y" data-buy="monthly">Add $5 a month</a>')
+    check("the monthly button is not read as a once-price",
+          once_label == ["Buy once — $39.99"], str(once_label))
+
     m = JSONLD_RE.search(texts["index.html"])
     if m:
         try:
